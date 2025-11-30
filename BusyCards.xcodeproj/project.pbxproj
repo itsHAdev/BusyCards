@@ -35,16 +35,6 @@
 			path = BusyCards;
 			sourceTree = "<group>";
 		};
-		5FBDB46D2EDCBA73006EABFE /* BusyCardsTests */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = BusyCardsTests;
-			sourceTree = "<group>";
-		};
-		5FBDB4772EDCBA73006EABFE /* BusyCardsUITests */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = BusyCardsUITests;
-			sourceTree = "<group>";
-		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -76,8 +66,6 @@
 			isa = PBXGroup;
 			children = (
 				5FBDB45F2EDCBA71006EABFE /* BusyCards */,
-				5FBDB46D2EDCBA73006EABFE /* BusyCardsTests */,
-				5FBDB4772EDCBA73006EABFE /* BusyCardsUITests */,
 				5FBDB45E2EDCBA71006EABFE /* Products */,
 			);
 			sourceTree = "<group>";
@@ -130,9 +118,6 @@
 			dependencies = (
 				5FBDB46C2EDCBA73006EABFE /* PBXTargetDependency */,
 			);
-			fileSystemSynchronizedGroups = (
-				5FBDB46D2EDCBA73006EABFE /* BusyCardsTests */,
-			);
 			name = BusyCardsTests;
 			packageProductDependencies = (
 			);
@@ -152,9 +137,6 @@
 			);
 			dependencies = (
 				5FBDB4762EDCBA73006EABFE /* PBXTargetDependency */,
-			);
-			fileSystemSynchronizedGroups = (
-				5FBDB4772EDCBA73006EABFE /* BusyCardsUITests */,
 			);
 			name = BusyCardsUITests;
 			packageProductDependencies = (
