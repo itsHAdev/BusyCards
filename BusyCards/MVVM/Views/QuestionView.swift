@@ -49,23 +49,25 @@ struct QuestionView: View {
                     .listStyle(.plain)
                     .listRowSeparator(.hidden) // hide separators
                     .safeAreaPadding(.top, 4)
+                }
 
-                    // Floating add card overlay
-                    if showingAddCard {
+                // Floating add card overlay (full-screen layer so the card can be centered)
+                if showingAddCard {
+                    ZStack {
                         // Dimmed backdrop (tap to dismiss)
                         Color.black.opacity(0.15)
                             .ignoresSafeArea()
-                            .transition(.opacity)
                             .onTapGesture { cancelAdd() }
 
                         addCard
-                            .transition(.asymmetric(
-                                insertion: .scale(scale: 0.95).combined(with: .opacity),
-                                removal: .opacity
-                                
-                            ))
                             .padding(.horizontal, 24)
+                            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
                     }
+                    .transition(.asymmetric(
+                        insertion: .scale(scale: 0.95).combined(with: .opacity),
+                        removal: .opacity
+                    ))
+                    .zIndex(1)
                 }
             }
             .animation(.spring(response: 0.35, dampingFraction: 0.9), value: showingAddCard)
@@ -104,14 +106,7 @@ struct QuestionView: View {
 
                 Spacer()
 
-                // BACK on the left (last in RTL HStack)
-                GlassCircleButton(
-                    systemName: "chevron.left",
-                    diameter: 48,
-                    baseBackground: baseBg
-                ) {
-                    dismiss()
-                }
+             
             }
         }
         .frame(maxWidth: .infinity, minHeight: 64, alignment: .center)
