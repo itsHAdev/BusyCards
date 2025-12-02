@@ -20,6 +20,11 @@ struct OnboardingView1: View {
                 .frame(width: 330,height: 730)
                 .padding(.top,150)
             
+            Image(systemName: "arrow.up.right")
+                .font(.system(size: 50))
+                .fontWeight(.light)
+                .offset(x: 120,y: -235)
+            
             
             Color.white
             
