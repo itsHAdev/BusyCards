@@ -13,7 +13,7 @@ struct OnboardingView1: View {
         
         ZStack{
             
-            Color.lightGray
+            Color.grayApp
                 .ignoresSafeArea()
             
             Image("iphone1")
