@@ -27,55 +27,51 @@ struct QuestionView: View {
                     // Content area starts here (under the icons)
                     List {
                         ForEach(viewModel.items) { item in
-                            HStack(spacing: 0) {
-                                Spacer(minLength: 0)
-                                Text(item.title)
-                                    .font(.custom("SF Arabic Rounded", size: 20))
-                                    .multilineTextAlignment(.trailing)
-                            }
-                            .frame(maxWidth: .infinity, alignment: .trailing)
-                            .padding(.vertical, 8)
-                            .contentShape(Rectangle())
-                            .listRowInsets(EdgeInsets(top: 8, leading: 0, bottom: 8, trailing: 240))
-                            .listRowSeparator(.visible)
-                            .listRowBackground(Color.clear)
-                            // Swipe-to-delete (يظهر زر "حذف" الأحمر)
-                            .swipeActions(edge: .trailing, allowsFullSwipe: true) {
-                                Button(role: .destructive) {
-                                    deleteItem(item)
-                                } label: {
-                                    Text("حذف")
+                            Text(item.title)
+                                .font(.custom("SF Arabic Rounded", size: 22)) // bigger text
+                                .lineLimit(nil)
+                                .lineSpacing(4) // more line spacing for multi-line titles
+                                .frame(maxWidth: .infinity, alignment: .leading) // محاذاة النص لليمين
+                                .padding(.vertical, 14) // taller rows
+                                .listRowInsets(EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16)) // use almost full width
+                                .listRowBackground(Color.clear)
+                                .swipeActions(edge: .leading) {   // السحب من اليسار
+                                    Button(role: .destructive) {
+                                        deleteItem(item)
+                                    } label: {
+                                        Text("حذف")
+                                    }
                                 }
-                            }
                         }
-                        .onDelete(perform: delete) // يبقى لدعم الحذف في وضع التعديل
-                        .deleteDisabled(viewModel.items.isEmpty)
                     }
-                    .scrollContentBackground(.hidden)
+                    .environment(\.layoutDirection, .rightToLeft) // Ensure the List itself is RTL
+                    .scrollContentBackground(.hidden) // remove List's default background
                     .listStyle(.plain)
+                    .listRowSeparator(.hidden) // hide separators
                     .safeAreaPadding(.top, 4)
-                }
 
-                // Floating add card overlay
-                if showingAddCard {
-                    // Dimmed backdrop (tap to dismiss)
-                    Color.black.opacity(0.15)
-                        .ignoresSafeArea()
-                        .transition(.opacity)
-                        .onTapGesture { cancelAdd() }
+                    // Floating add card overlay
+                    if showingAddCard {
+                        // Dimmed backdrop (tap to dismiss)
+                        Color.black.opacity(0.15)
+                            .ignoresSafeArea()
+                            .transition(.opacity)
+                            .onTapGesture { cancelAdd() }
 
-                    addCard
-                        .transition(.asymmetric(
-                            insertion: .scale(scale: 0.95).combined(with: .opacity),
-                            removal: .opacity
-                        ))
-                        .padding(.horizontal, 24)
+                        addCard
+                            .transition(.asymmetric(
+                                insertion: .scale(scale: 0.95).combined(with: .opacity),
+                                removal: .opacity
+                                
+                            ))
+                            .padding(.horizontal, 24)
+                    }
                 }
             }
             .animation(.spring(response: 0.35, dampingFraction: 0.9), value: showingAddCard)
             .navigationBarHidden(true)
         }
-        .environment(\.layoutDirection, .rightToLeft)
+        .environment(\.layoutDirection, .rightToLeft) // RTL for the whole screen
         .task {
             await viewModel.loadSampleIfNeeded()
         }
@@ -87,7 +83,6 @@ struct QuestionView: View {
                 .font(.custom("SF Arabic Rounded", size: 25))
                 .foregroundStyle(.primary)
                 .multilineTextAlignment(.center)
-               
 
             HStack {
                 // PLUS on the right (first in RTL HStack)
@@ -128,9 +123,11 @@ struct QuestionView: View {
         VStack(alignment: .trailing, spacing: 16) {
             Text("أضف سؤال")
                .font(.custom("SF Arabic Rounded", size: 20))
+               .frame(maxWidth: .infinity, alignment: .leading)
 
+            
             TextField("سؤال", text: $newTitle)
-                .multilineTextAlignment(.trailing)
+                .frame(maxWidth: .infinity, alignment: .leading)
                 .focused($isFieldFocused)
                 .textInputAutocapitalization(.sentences)
                 .submitLabel(.done)
@@ -147,7 +144,6 @@ struct QuestionView: View {
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 14)
                         .background(Capsule().fill(Color(.systemGray6)))
-                        
                 }
 
                 Button(action: saveAdd) {
