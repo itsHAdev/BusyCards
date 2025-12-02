@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct ContentView2: View {
+struct HomePage: View {
 
     @StateObject private var viewModel = ContentViewModel()
 
