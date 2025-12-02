@@ -33,13 +33,13 @@ struct OnboardingView2: View {
                     .frame(width: 402,height: 621)
                     .padding(.top,230)
                 
-                VStack(spacing: 17){
+                VStack(spacing: 20){
                     Text("قائمة الأطفال وأنماط التعلم")
                         .font(.system(size: 28))
                         .fontWeight(.medium)
                     
                     
-                    Text("من هنا يمكن مشاهدة أسماء الأطفال والتعرف على نمط التعلم الخاص بكل طفل و هذا يساعد على فهم أسلوب الطفل وتسهيل متابعة التقدم.")
+                    Text("من هنا يمكن مشاهدة أسماء الأطفال والتعرف على نمط التعلم الخاص بكل طفل.")
                         .frame(width: 342,height: 100)
                         .multilineTextAlignment(.center)
                         .font(.system(size: 20))
@@ -68,7 +68,7 @@ struct OnboardingView2: View {
                         VStack{
                             
                             Text("تخطي الارشادات")
-                                .font(.system(size: 22))
+                                .font(.system(size: 15))
                                 .foregroundStyle(Color.darkBlue)
                             
                         }//v

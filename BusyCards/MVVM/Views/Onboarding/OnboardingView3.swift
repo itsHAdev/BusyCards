@@ -30,13 +30,13 @@ struct OnboardingView3: View {
                     .frame(width: 402,height: 621)
                     .padding(.top,230)
                 
-                VStack(spacing: 17){
+                VStack(spacing: 20){
                     Text("اختبار تحديد نمط التعلم")
                         .font(.system(size: 28))
                         .fontWeight(.medium)
                     
                     
-                    Text("يفتح هذا الزر اختبار يساعد على معرفة نمط تعلم الطفل بعد إكمال الاختبار يظهر النوع المناسب لكل طفل لتسهيل متابعة تعلمه بطريقة فعالة.")
+                    Text("من هنا يمكن بدا الاختبار لمعرفة نمط تعلم الطفل.")
                         .frame(width: 302,height: 100)
                         .multilineTextAlignment(.center)
                         .font(.system(size: 20))
@@ -63,7 +63,7 @@ struct OnboardingView3: View {
                         VStack{
                             
                             Text("تخطي الارشادات")
-                                .font(.system(size: 22))
+                                .font(.system(size: 15))
                                 .foregroundStyle(Color.darkBlue)
                             
                         }//v

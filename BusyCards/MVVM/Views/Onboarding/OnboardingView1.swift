@@ -31,12 +31,12 @@ struct OnboardingView1: View {
                     .frame(width: 402,height: 621)
                     .padding(.top,230)
                 
-                VStack(spacing: 17){
+                VStack(spacing: 20){
                     Text("أسئلة الطفل اليومية")
                         .font(.system(size: 28))
                         .fontWeight(.medium)
                     
-                    Text("يمكنك عبر هذا الزر إضافة الأسئلة التي ترغب بها ليتم عرضها بشكل عشوائي للطفل داخل الـ Busy Cards هذه الأسئلة تساعد على إثراء تجربة التعلم وجعلها أكثر تفاعل.")
+                    Text("يمكنك عبر هذا الزر إضافة الأسئلة التي ترغب بها ليتم عرضها بشكل عشوائي للطفل داخل الـ Busy Cards.")
                         .frame(width: 322,height: 100)
                         .multilineTextAlignment(.center)
                         .font(.system(size: 20))
@@ -64,7 +64,7 @@ struct OnboardingView1: View {
                     } label: {
                         VStack {
                             Text("تخطي الارشادات")
-                                .font(.system(size: 22))
+                                .font(.system(size: 15))
                                 .foregroundStyle(Color.darkBlue)
                         }//v
                     }//b
