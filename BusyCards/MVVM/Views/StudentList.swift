@@ -17,7 +17,7 @@ struct StudentList: View {
     @State private var showSheet = true // sheet يظهر تلقائيًا عند التشغيل
     
     let children = [
-        Child(name: "اسم الطفل", type: "سمعي", imageName: "Auditory2"),
+        Child(name: "اسم الطفل", type: "سمعي", imageName: "AuditoryC"),
         Child(name: "اسم الطفل", type: "بصري", imageName: "VisualC"),
         Child(name: "اسم الطفل", type: "حركي", imageName: "KinestheticC"),
         Child(name: "اسم الطفل", type: "نوع التعلم", imageName: nil),

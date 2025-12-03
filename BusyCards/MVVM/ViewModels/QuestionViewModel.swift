@@ -25,10 +25,8 @@ final class QuestionsViewModel: ObservableObject {
         guard items.isEmpty else { return }
         // Sample data matching the screenshot
         items = [
-            QuestionItem(title: "جدول ضرب أربعة"),
-            QuestionItem(title: "جدول ضرب ثلاثة"),
-            QuestionItem(title: "جدول ضرب خمسة"),
-            QuestionItem(title: "جدول ضرب ستة")
+            QuestionItem(title: "4x3"),
+            QuestionItem(title: "4x4")
         ]
     }
 }

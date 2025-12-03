@@ -136,7 +136,7 @@ struct QuestionView: View {
                 Button(action: cancelAdd) {
                     Text("إلغاء")
                         .font(.custom("SF Arabic Rounded", size: 20))
-                        .foregroundStyle(.primary)
+                        .foregroundStyle(.black)
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 14)
                         .background(Capsule().fill(Color(.systemGray6)))
@@ -145,7 +145,7 @@ struct QuestionView: View {
                 Button(action: saveAdd) {
                     Text("حفظ")
                         .font(.custom("SF Arabic Rounded", size: 20))
-                        .foregroundStyle(.primary)
+                        .foregroundStyle(.black)
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 14)
                         .background(Capsule().fill(Color(.systemGray6)))
