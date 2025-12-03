@@ -8,13 +8,14 @@
 import SwiftUI
 
 struct HomePage: View {
-
+    @State private var showSheet = false
     @StateObject private var viewModel = ContentViewModel()
 
     // Color assets
     private let beigeBackground = Color("Background")
     private let deepDarkBlue = Color("DarkBlue")
 
+    
     var body: some View {
         NavigationStack {
 
@@ -59,7 +60,7 @@ struct HomePage: View {
                     .frame(height: 500)
 
                     // MARK: - Test Button
-                    NavigationLink(destination: TestPage()) {
+                    NavigationLink(destination: SurveyView()) {
                         Text("ابدأ الاختبار")
                             .font(.title2.weight(.semibold))
                             .frame(maxWidth: 250, minHeight: 56)
@@ -74,15 +75,27 @@ struct HomePage: View {
                 // MARK: - Top Buttons
                 HStack(spacing: 12) {
 
-                    NavigationLink(destination: AddPage()) {
+                    NavigationLink(destination: QuestionView()) {
                         glassButton(icon: "plus")
                     }
                     .buttonStyle(.plain)
 
-                    NavigationLink(destination: EditPage()) {
-                        glassButton(icon: "pencil.and.outline")
-                    }
-                    .buttonStyle(.plain)
+                    Button {
+                                showSheet = true
+                            } label: {
+                                glassButton(icon: "pencil.and.outline")
+                            }
+                            .buttonStyle(.plain)
+
+                        
+                        // دمج الشييت هنا
+                        .sheet(isPresented: $showSheet) {
+                            NamesSheetView(children: viewModel.children)
+                                .presentationDetents([.large])
+                                .presentationCornerRadius(40)
+                                .interactiveDismissDisabled(false)
+                                .environment(\.layoutDirection, .rightToLeft)
+                        }
 
                 }
                 .padding(.top, 10)
@@ -116,4 +129,7 @@ struct HomePage: View {
                 .foregroundColor(.black.opacity(0.99))
         }
     }
+}
+#Preview {
+    HomePage()
 }

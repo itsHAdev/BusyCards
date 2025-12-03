@@ -11,7 +11,7 @@ struct QuestionView: View {
     private let baseBg = Color(red: 0.96, green: 0.90, blue: 0.90)
 
     var body: some View {
-        NavigationStack {
+        
             ZStack {
                 // Background color similar to the screenshot
                 baseBg
@@ -71,8 +71,9 @@ struct QuestionView: View {
                 }
             }
             .animation(.spring(response: 0.35, dampingFraction: 0.9), value: showingAddCard)
-            .navigationBarHidden(true)
-        }
+            //.navigationBarHidden(true)
+        
+        
         .environment(\.layoutDirection, .rightToLeft) // RTL for the whole screen
         .task {
             await viewModel.loadSampleIfNeeded()
