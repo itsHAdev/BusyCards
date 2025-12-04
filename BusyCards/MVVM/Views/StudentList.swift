@@ -53,7 +53,7 @@ struct NamesSheetView: View {
             
             Text("قائمة الأسماء")
                 .font(.title2.bold())
-                .foregroundColor(.white)
+                .foregroundColor(.black)
                 .padding(.bottom, 24)
             
             VStack(spacing: 24) {
@@ -66,7 +66,7 @@ struct NamesSheetView: View {
             Spacer()
         }
         .background(
-            Color(red: 37/255, green: 65/255, blue: 154/255)
+            Color("Background")
                 .ignoresSafeArea()
         )
     }

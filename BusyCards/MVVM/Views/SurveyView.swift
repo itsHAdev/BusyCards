@@ -77,7 +77,7 @@ struct SurveyView: View {
                         Text("التالي")
                             .font(.custom("SF Arabic Rounded", size: 20))
                             .foregroundColor(.white)
-                            .frame(width: 260, height: 56)
+                            .frame(width: 334, height: 50)
                             .background(Color.darkBlue)
                             .cornerRadius(14)
                             .shadow(color: .black.opacity(0.15), radius: 4, y: 2)
