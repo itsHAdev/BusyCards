@@ -74,10 +74,7 @@ struct QuestionView: View {
             //.navigationBarHidden(true)
         
         
-        .environment(\.layoutDirection, .rightToLeft) // RTL for the whole screen
-        .task {
-            await viewModel.loadSampleIfNeeded()
-        }
+        .environment(\.layoutDirection, .rightToLeft)
     }
 
     private var header: some View {

@@ -8,39 +8,45 @@
 import SwiftUI
 
 struct AuditoryView: View {
+    @StateObject private var viewModel = QuestionsViewModel()
+    @State private var question: QuestionItem?
+
     var body: some View {
-        NavigationStack{
-            
-            ZStack{
-                
+        NavigationStack {
+            ZStack {
                 Color.background
                     .ignoresSafeArea()
-                
-                VStack(spacing: 152){
-                    
+
+                VStack(spacing: 152) {
                     Image("Auditory2")
-                    
-                    
-                    Text("جدول ضرب 2")
+
+                    // السؤال
+                    Text(question?.title ?? "لا يوجد سؤال")
                         .font(.system(size: 34))
-                    
+                        .multilineTextAlignment(.center)
+                        .padding()
+
+                    // زر الاستماع (نفسه بدون تحديث السؤال)
                     NavigationLink {
                         AuditoryView2()
                     } label: {
-                        ZStack{
+                        ZStack {
                             Color.darkBlue
-                                .frame(width: 260,height: 56)
+                                .frame(width: 260, height: 56)
                                 .cornerRadius(15)
-                                .shadow(color: Color.black, radius: 3,x: 2,y: 2)
-                            
+                                .shadow(color: Color.black, radius: 3, x: 2, y: 2)
+
                             Text("استمع للإجابة")
                                 .foregroundStyle(Color.white)
                                 .font(.system(size: 28))
                         }
                     }
-                }//v
-                
-            }//z
+                } // VStack
+            } // ZStack
+        }
+        .onAppear {
+            // اختار سؤال عشوائي لو فيه أسئلة، وإلا يظل nil
+            question = viewModel.randomQuestion()
         }
     }
 }
@@ -48,6 +54,7 @@ struct AuditoryView: View {
 #Preview {
     AuditoryView()
 }
+
 
 import SwiftUI
 
