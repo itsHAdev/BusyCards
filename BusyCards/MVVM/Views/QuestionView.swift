@@ -4,6 +4,7 @@ struct QuestionView: View {
     @StateObject private var viewModel = QuestionsViewModel()
     @State private var showingAddCard = false
     @State private var newTitle: String = ""
+    @State private var newLink: String = ""            // حقل الرابط (UI فقط حالياً)
     @FocusState private var isFieldFocused: Bool
     @Environment(\.dismiss) private var dismiss
 
@@ -11,69 +12,65 @@ struct QuestionView: View {
     private let baseBg = Color(red: 0.96, green: 0.90, blue: 0.90)
 
     var body: some View {
-        
-            ZStack {
-                // Background color similar to the screenshot
-                baseBg
-                    .ignoresSafeArea()
+        ZStack {
+            // Background color similar to the screenshot
+            baseBg
+                .ignoresSafeArea()
 
-                VStack(spacing: 0) {
-                    // Header occupies fixed vertical space; content will be below it
-                    header
-                        .padding(.horizontal, 16)
-                        .padding(.top, 16)
-                        .padding(.bottom, 12)
+            VStack(spacing: 0) {
+                // Header occupies fixed vertical space; content will be below it
+                header
+                    .padding(.horizontal, 16)
+                    .padding(.top, 16)
+                    .padding(.bottom, 12)
 
-                    // Content area starts here (under the icons)
-                    List {
-                        ForEach(viewModel.items) { item in
-                            Text(item.title)
-                                .font(.custom("SF Arabic Rounded", size: 22)) // bigger text
-                                .lineLimit(nil)
-                                .lineSpacing(4) // more line spacing for multi-line titles
-                                .frame(maxWidth: .infinity, alignment: .leading) // محاذاة النص لليمين
-                                .padding(.vertical, 14) // taller rows
-                                .listRowInsets(EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16)) // use almost full width
-                                .listRowBackground(Color.clear)
-                                .swipeActions(edge: .leading) {   // السحب من اليسار
-                                    Button(role: .destructive) {
-                                        deleteItem(item)
-                                    } label: {
-                                        Text("حذف")
-                                    }
+                // Content area starts here (under the icons)
+                List {
+                    ForEach(viewModel.items) { item in
+                        Text(item.title)
+                            .font(.custom("SF Arabic Rounded", size: 22)) // bigger text
+                            .lineLimit(nil)
+                            .lineSpacing(4) // more line spacing for multi-line titles
+                            .frame(maxWidth: .infinity, alignment: .leading) // محاذاة النص لليمين
+                            .padding(.vertical, 14) // taller rows
+                            .listRowInsets(EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16)) // use almost full width
+                            .listRowBackground(Color.clear)
+                            .swipeActions(edge: .leading) {   // السحب من اليسار
+                                Button(role: .destructive) {
+                                    deleteItem(item)
+                                } label: {
+                                    Text("حذف")
                                 }
-                        }
+                            }
                     }
-                    .environment(\.layoutDirection, .rightToLeft) // Ensure the List itself is RTL
-                    .scrollContentBackground(.hidden) // remove List's default background
-                    .listStyle(.plain)
-                    .listRowSeparator(.hidden) // hide separators
-                    .safeAreaPadding(.top, 4)
                 }
-
-                // Floating add card overlay (full-screen layer so the card can be centered)
-                if showingAddCard {
-                    ZStack {
-                        // Dimmed backdrop (tap to dismiss)
-                        Color.black.opacity(0.15)
-                            .ignoresSafeArea()
-                            .onTapGesture { cancelAdd() }
-
-                        addCard
-                            .padding(.horizontal, 24)
-                            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
-                    }
-                    .transition(.asymmetric(
-                        insertion: .scale(scale: 0.95).combined(with: .opacity),
-                        removal: .opacity
-                    ))
-                    .zIndex(1)
-                }
+                .environment(\.layoutDirection, .rightToLeft) // Ensure the List itself is RTL
+                .scrollContentBackground(.hidden) // remove List's default background
+                .listStyle(.plain)
+                .listRowSeparator(.hidden) // hide separators
+                .safeAreaPadding(.top, 4)
             }
-            .animation(.spring(response: 0.35, dampingFraction: 0.9), value: showingAddCard)
-            //.navigationBarHidden(true)
-        
-        
+
+            // Floating add card overlay (full-screen layer so the card can be centered)
+            if showingAddCard {
+                ZStack {
+                    // Dimmed backdrop (tap to dismiss)
+                    Color.black.opacity(0.15)
+                        .ignoresSafeArea()
+                        .onTapGesture { cancelAdd() }
+
+                    addCard
+                        .padding(.horizontal, 24)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+                }
+                .transition(.asymmetric(
+                    insertion: .scale(scale: 0.95).combined(with: .opacity),
+                    removal: .opacity
+                ))
+                .zIndex(1)
+            }
+        }
+        .animation(.spring(response: 0.35, dampingFraction: 0.9), value: showingAddCard)
         .environment(\.layoutDirection, .rightToLeft)
     }
 
@@ -99,12 +96,11 @@ struct QuestionView: View {
                     } else {
                         isFieldFocused = false
                         newTitle = ""
+                        newLink = ""
                     }
                 }
 
                 Spacer()
-
-             
             }
         }
         .frame(maxWidth: .infinity, minHeight: 64, alignment: .center)
@@ -113,47 +109,73 @@ struct QuestionView: View {
 
     // MARK: - Add Card UI
     private var addCard: some View {
-        VStack(alignment: .trailing, spacing: 16) {
+        VStack(alignment: .trailing, spacing: 20) {
+            // العنوان الأول
             Text("أضف سؤال")
-               .font(.custom("SF Arabic Rounded", size: 20))
-               .frame(maxWidth: .infinity, alignment: .leading)
-
-            
-            TextField("سؤال", text: $newTitle)
+                .font(.custom("SF Arabic Rounded", size: 26).weight(.semibold))
                 .frame(maxWidth: .infinity, alignment: .leading)
+
+            // حقل السؤال
+            TextField("سؤال", text: $newTitle)
                 .focused($isFieldFocused)
                 .textInputAutocapitalization(.sentences)
                 .submitLabel(.done)
                 .padding(.horizontal, 20)
-                .padding(.vertical, 16)
+                .padding(.vertical, 18)
                 .background(Capsule().fill(Color(.systemGray6)))
-                .font(.custom("SF Arabic Rounded", size: 20))
+                .font(.custom("SF Arabic Rounded", size: 22))
+                .foregroundStyle(.primary)
 
+            // العنوان الثاني
+            Text("أضف رابط الإجابة")
+                .font(.custom("SF Arabic Rounded", size: 26).weight(.semibold))
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.top, 4)
+
+            // حقل الرابط
+            TextField("رابط", text: $newLink)
+                .keyboardType(.URL)
+                .textInputAutocapitalization(.never)
+                .autocorrectionDisabled(true)
+                .padding(.horizontal, 20)
+                .padding(.vertical, 18)
+                .background(Capsule().fill(Color(.systemGray6)))
+                .font(.custom("SF Arabic Rounded", size: 22))
+                .foregroundStyle(.primary)
+
+            // النص الإرشادي
+            Text("تأكد من إمكانية عمل الرابط لك فيديو أو صوت.")
+                .font(.custom("SF Arabic Rounded", size: 20))
+                .foregroundStyle(.primary)
+                .multilineTextAlignment(.leading)
+                .padding(.top, 2)
+
+            // الأزرار
             HStack(spacing: 16) {
                 Button(action: cancelAdd) {
                     Text("إلغاء")
-                        .font(.custom("SF Arabic Rounded", size: 20))
+                        .font(.custom("SF Arabic Rounded", size: 22).weight(.semibold))
                         .foregroundStyle(.black)
                         .frame(maxWidth: .infinity)
-                        .padding(.vertical, 14)
+                        .padding(.vertical, 16)
                         .background(Capsule().fill(Color(.systemGray6)))
                 }
 
                 Button(action: saveAdd) {
                     Text("حفظ")
-                        .font(.custom("SF Arabic Rounded", size: 20))
+                        .font(.custom("SF Arabic Rounded", size: 22).weight(.semibold))
                         .foregroundStyle(.black)
                         .frame(maxWidth: .infinity)
-                        .padding(.vertical, 14)
+                        .padding(.vertical, 16)
                         .background(Capsule().fill(Color(.systemGray6)))
                 }
                 .disabled(newTitle.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
                 .opacity(newTitle.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? 0.5 : 1)
             }
         }
-        .padding(20)
+        .padding(24)
         .background(
-            RoundedRectangle(cornerRadius: 22, style: .continuous)
+            RoundedRectangle(cornerRadius: 40, style: .continuous)
                 .fill(Color(.systemBackground))
                 .shadow(color: .black.opacity(0.08), radius: 16, x: 0, y: 8)
         )
@@ -163,9 +185,10 @@ struct QuestionView: View {
     private func saveAdd() {
         let trimmed = newTitle.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmed.isEmpty else { return }
-        viewModel.add(title: trimmed)
+        viewModel.add(title: trimmed) // حالياً نخزن العنوان فقط
         UIImpactFeedbackGenerator(style: .light).impactOccurred()
         newTitle = ""
+        newLink = ""
         isFieldFocused = false
         showingAddCard = false
     }
@@ -173,6 +196,7 @@ struct QuestionView: View {
     private func cancelAdd() {
         UIImpactFeedbackGenerator(style: .light).impactOccurred()
         newTitle = ""
+        newLink = ""
         isFieldFocused = false
         showingAddCard = false
     }
@@ -258,5 +282,5 @@ private struct GlassCircleButton: View {
 }
 
 #Preview {
-        QuestionView()
+    QuestionView()
 }
