@@ -7,12 +7,14 @@ struct SeeingPage: View {
     private let bg = Color("Background")
     private let primary = Color("DarkBlue")
     
+    @StateObject private var viewModel = QuestionsViewModel()
+    @State private var question: QuestionItem?
+    
     var body: some View {
-        
-        NavigationStack{
-        ZStack(alignment: .top) {
-            bg.ignoresSafeArea()
-            
+        NavigationStack {
+            ZStack(alignment: .top) {
+                bg.ignoresSafeArea()
+                
                 VStack(spacing: 152) {
                     
                     // Illustration
@@ -21,20 +23,14 @@ struct SeeingPage: View {
                         .scaledToFit()
                         .frame(width: 280, height: 280)
                     
-                    
-                    
                     // Question text
-                    Text("ماهو جدول ضرب ٢")
-                        .font(.system(size: 28, weight: .regular))
-                        .foregroundColor(.black)
+                    Text(question?.title ?? "لا يوجد سؤال")
+                        .font(.system(size: 34))
                         .multilineTextAlignment(.center)
                     
-                    
-                    
-                    
-                   
-                    Button {
-                        
+                    NavigationLink {
+                        SeeingPage2()
+                            .navigationBarBackButtonHidden(false)
                     } label: {
                         Text("انظر للإجابة")
                             .foregroundColor(.white)
@@ -47,13 +43,20 @@ struct SeeingPage: View {
                             )
                     }
                     .buttonStyle(.plain)
-                    
                 }
             }
         }
-        .environment(\.layoutDirection, .rightToLeft)
-        .navigationBarBackButtonHidden(true)
+        .onAppear {
+            // اختار سؤال عشوائي لو فيه أسئلة، وإلا يظل nil
+            question = viewModel.randomQuestion()
+        }
+ .environment(\.layoutDirection, .rightToLeft)
+ .navigationBarBackButtonHidden(false)
     }
+}
+
+#Preview {
+    SeeingPage()
 }
 
 // A lightweight glassy circular button, visually matching your existing style
@@ -103,8 +106,4 @@ private struct GlassCircle: View {
         .shadow(color: Color.black.opacity(0.06), radius: 6, x: 0, y: 3)
         .contentShape(Circle())
     }
-}
-
-#Preview {
-    SeeingPage()
 }

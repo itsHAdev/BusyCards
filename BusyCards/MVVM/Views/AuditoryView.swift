@@ -20,13 +20,11 @@ struct AuditoryView: View {
                 VStack(spacing: 152) {
                     Image("Auditory2")
 
-                    // السؤال
                     Text(question?.title ?? "لا يوجد سؤال")
                         .font(.system(size: 34))
                         .multilineTextAlignment(.center)
-                        .padding()
+                        
 
-                    // زر الاستماع (نفسه بدون تحديث السؤال)
                     NavigationLink {
                         AuditoryView2()
                     } label: {

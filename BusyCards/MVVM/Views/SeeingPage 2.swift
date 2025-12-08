@@ -10,45 +10,48 @@ struct SeeingPage2: View {
     
     
     var body: some View {
-        ZStack(alignment: .top) {
-            bg.ignoresSafeArea()
-            
-            
-            VStack(spacing: 0) {
-                // Top-left back button
-               
-                
-                // Center illustration
-                Image("GG1")
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 290, height: 290)
-                    .padding(.top, 24)
-                
-                Spacer()
+        NavigationStack{
+            ZStack(alignment: .top) {
+                bg.ignoresSafeArea()
                 
                 
-                // Bottom primary button
-                Button {
-                   
-                } label: {
-                    Text("انتهيت")
-                .foregroundColor(.white)
-                .font(.system(size: 22, weight: .semibold))
-                .frame(maxWidth: 280, minHeight: 56)
-                .background(
-                        RoundedRectangle(cornerRadius: 16)
-                        .fill(primary)
-                        .shadow(color: .black.opacity(0.25), radius: 4, x: 2, y: 3)
-                        )
+                VStack(spacing: 87) {
+                    
+                    
+                    // Center illustration
+                    Image("GG1")
+//                        .resizable()
+//                        .scaledToFit()
+//                        .frame(width: 290, height: 290)
+                       
+                    
+                  
+                    Color.darkBlue
+                        .frame(width: 368,height: 214)
+                        .cornerRadius(9)
+                    
+                    
+                    // Bottom primary button
+                    NavigationLink {
+                        HomePage()
+                            .navigationBarBackButtonHidden(true)
+                    } label: {
+                        Text("انتهيت")
+                            .foregroundColor(.white)
+                            .font(.system(size: 22, weight: .semibold))
+                            .frame(maxWidth: 280, minHeight: 56)
+                            .background(
+                                RoundedRectangle(cornerRadius: 16)
+                                    .fill(primary)
+                                    .shadow(color: .black.opacity(0.25), radius: 4, x: 2, y: 3)
+                            )
+                    }
+                    //.buttonStyle(.plain)
                 }
-                
-                .buttonStyle(.plain)
-                .padding(.bottom, 97)
             }
         }
 
-        .environment(\.layoutDirection, .rightToLeft)
+        //.environment(\.layoutDirection, .rightToLeft)
         .navigationBarBackButtonHidden(true)
     }
 }
@@ -112,3 +115,4 @@ private struct GlassCircle: View {
 #Preview {
     SeeingPage2()
 }
+
