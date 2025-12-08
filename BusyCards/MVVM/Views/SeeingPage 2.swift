@@ -2,7 +2,7 @@
 
 
 import SwiftUI
-struct SeeingPage_2: View {
+struct SeeingPage2: View {
     @Environment(\.dismiss) private var dismiss
     
     private let bg = Color("Background")
@@ -16,16 +16,7 @@ struct SeeingPage_2: View {
             
             VStack(spacing: 0) {
                 // Top-left back button
-                HStack {
-                    GlassCircle(systemName: "chevron.backward") {
-                        dismiss()
-                    }
-                    Spacer()
-                }
-                
-                .padding(.horizontal, 16)
-                .padding(.top, 16)
-                
+               
                 
                 // Center illustration
                 Image("GG1")
@@ -39,8 +30,7 @@ struct SeeingPage_2: View {
                 
                 // Bottom primary button
                 Button {
-                    // End / finish action
-                    dismiss()
+                   
                 } label: {
                     Text("انتهيت")
                 .foregroundColor(.white)
@@ -120,5 +110,5 @@ private struct GlassCircle: View {
 
 
 #Preview {
-    SeeingPage_2()
+    SeeingPage2()
 }

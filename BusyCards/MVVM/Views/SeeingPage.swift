@@ -8,56 +8,47 @@ struct SeeingPage: View {
     private let primary = Color("DarkBlue")
     
     var body: some View {
+        
+        NavigationStack{
         ZStack(alignment: .top) {
             bg.ignoresSafeArea()
             
-            
-            VStack(spacing: 0) {
-                // Top bar with two circular glass buttons
-                HStack {
-                    GlassCircle(systemName: "chevron.backward") {
-                        dismiss()
+                VStack(spacing: 152) {
+                    
+                    // Illustration
+                    Image("GG1")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 280, height: 280)
+                    
+                    
+                    
+                    // Question text
+                    Text("ماهو جدول ضرب ٢")
+                        .font(.system(size: 28, weight: .regular))
+                        .foregroundColor(.black)
+                        .multilineTextAlignment(.center)
+                    
+                    
+                    
+                    
+                   
+                    Button {
+                        
+                    } label: {
+                        Text("انظر للإجابة")
+                            .foregroundColor(.white)
+                            .font(.system(size: 22, weight: .semibold))
+                            .frame(maxWidth: 280, minHeight: 56)
+                            .background(
+                                RoundedRectangle(cornerRadius: 16)
+                                    .fill(primary)
+                                    .shadow(color: .black.opacity(0.25), radius: 4, x: 2, y: 3)
+                            )
                     }
-                    Spacer()
+                    .buttonStyle(.plain)
+                    
                 }
-                .padding(.horizontal, 16)
-                .padding(.top, 16)
-                
-                
-                // Illustration
-                Image("VisualC")
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 220, height: 220)
-                    .padding(.top, 24)
-                
-                Spacer().frame(height: 32)
-                
-                // Question text
-                Text("ماهو جدول ضرب ٢")
-                    .font(.system(size: 28, weight: .regular))
-                    .foregroundColor(.black)
-                    .multilineTextAlignment(.center)
-                    .padding(.horizontal, 34)
-                
-                Spacer()
-                
-                // Primary button
-                Button {
-                    // Navigate or reveal the answer
-                } label: {
-                    Text("انظر للإجابة")
-                        .foregroundColor(.white)
-                        .font(.system(size: 22, weight: .semibold))
-                        .frame(maxWidth: 280, minHeight: 56)
-                        .background(
-                        RoundedRectangle(cornerRadius: 16)
-                        .fill(primary)
-                        .shadow(color: .black.opacity(0.25), radius: 4, x: 2, y: 3)
-                        )
-                }
-                .buttonStyle(.plain)
-                .padding(.bottom, 97)
             }
         }
         .environment(\.layoutDirection, .rightToLeft)
