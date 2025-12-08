@@ -1,11 +1,13 @@
-import SwiftUI
 
-struct SeeingPage: View {
+
+
+import SwiftUI
+struct SeeingPage_2: View {
     @Environment(\.dismiss) private var dismiss
     
-    // Asset-backed colors used elsewhere in the project
     private let bg = Color("Background")
     private let primary = Color("DarkBlue")
+    
     
     var body: some View {
         ZStack(alignment: .top) {
@@ -13,63 +15,64 @@ struct SeeingPage: View {
             
             
             VStack(spacing: 0) {
-                // Top bar with two circular glass buttons
+                // Top-left back button
                 HStack {
                     GlassCircle(systemName: "chevron.backward") {
                         dismiss()
                     }
                     Spacer()
                 }
+                
                 .padding(.horizontal, 16)
                 .padding(.top, 16)
                 
                 
-                // Illustration
-                Image("VisualC")
+                // Center illustration
+                Image("GG1")
                     .resizable()
                     .scaledToFit()
-                    .frame(width: 220, height: 220)
+                    .frame(width: 290, height: 290)
                     .padding(.top, 24)
-                
-                Spacer().frame(height: 32)
-                
-                // Question text
-                Text("ماهو جدول ضرب ٢")
-                    .font(.system(size: 28, weight: .regular))
-                    .foregroundColor(.black)
-                    .multilineTextAlignment(.center)
-                    .padding(.horizontal, 34)
                 
                 Spacer()
                 
-                // Primary button
+                
+                // Bottom primary button
                 Button {
-                    // Navigate or reveal the answer
+                    // End / finish action
+                    dismiss()
                 } label: {
-                    Text("انظر للإجابة")
-                        .foregroundColor(.white)
-                        .font(.system(size: 22, weight: .semibold))
-                        .frame(maxWidth: 280, minHeight: 56)
-                        .background(
+                    Text("انتهيت")
+                .foregroundColor(.white)
+                .font(.system(size: 22, weight: .semibold))
+                .frame(maxWidth: 280, minHeight: 56)
+                .background(
                         RoundedRectangle(cornerRadius: 16)
                         .fill(primary)
                         .shadow(color: .black.opacity(0.25), radius: 4, x: 2, y: 3)
                         )
                 }
+                
                 .buttonStyle(.plain)
                 .padding(.bottom, 97)
             }
         }
+
         .environment(\.layoutDirection, .rightToLeft)
         .navigationBarBackButtonHidden(true)
     }
 }
 
-// A lightweight glassy circular button, visually matching your existing style
+
+
+
+// Reuse the same glassy circular button design for consistency.
 private struct GlassCircle: View {
     let systemName: String
     var diameter: CGFloat = 46
     var action: () -> Void
+    
+    
     
     var body: some View {
         Button(action: action) {
@@ -86,12 +89,12 @@ private struct GlassCircle: View {
                             .blur(radius: 1.2)
                             .offset(y: 1)
                             .mask(
-                                Circle()
-                                    .fill(
-                                        LinearGradient(
-                                            colors: [Color.black, .clear],
-                                            startPoint: .bottom,
-                                            endPoint: .top
+                            Circle()
+                            .fill(
+                            LinearGradient(
+                            colors: [Color.black, .clear],
+                            startPoint: .bottom,
+                            endPoint: .top
                                         )
                                     )
                             )
@@ -108,12 +111,14 @@ private struct GlassCircle: View {
                 )
                 .clipShape(Circle())
         }
+        
         .buttonStyle(.plain)
         .shadow(color: Color.black.opacity(0.06), radius: 6, x: 0, y: 3)
         .contentShape(Circle())
     }
 }
 
+
 #Preview {
-    SeeingPage()
+    SeeingPage_2()
 }
