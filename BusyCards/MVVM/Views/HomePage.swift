@@ -10,6 +10,8 @@ import SwiftUI
 struct HomePage: View {
     @State private var showSheet = false
     @StateObject private var viewModel = ContentViewModel()
+    @State private var showStudentsList = false
+    @StateObject var childrenVM = ChildrenViewModel()
 
     // Color assets
     private let beigeBackground = Color("Background")
@@ -59,8 +61,8 @@ struct HomePage: View {
                     }
                     .frame(height: 500)
 
-                    // MARK: - Test Button
-                    NavigationLink(destination: SurveyView()) {
+                   
+                    NavigationLink(destination: SurveyView().environmentObject(childrenVM)) {
                         Text("ابدأ الاختبار")
                             .font(.title2.weight(.semibold))
                             .frame(maxWidth: 250, minHeight: 56)
@@ -81,25 +83,24 @@ struct HomePage: View {
                     .buttonStyle(.plain)
 
                     Button {
-                                showSheet = true
-                            } label: {
-                                glassButton(icon: "pencil.and.outline")
-                            }
-                            .buttonStyle(.plain)
-
-                        
-                        // دمج الشييت هنا
-                        .sheet(isPresented: $showSheet) {
-                            NamesSheetView(children: viewModel.children)
-                                .presentationDetents([.large])
-                                .presentationCornerRadius(40)
-                                .interactiveDismissDisabled(false)
-                                .environment(\.layoutDirection, .rightToLeft)
-                        }
-
+                        // Present the students list sheet
+                        showStudentsList = true
+                    } label: {
+                        glassButton(icon: "pencil.and.outline")
+                    }
+                    .buttonStyle(.plain)
                 }
                 .padding(.top, 10)
                 .padding(.trailing, 15)
+            }
+            // Attach the sheet to a stable ancestor (the ZStack)
+            .sheet(isPresented: $showStudentsList) {
+                StudentsListView()
+                    .environmentObject(childrenVM)
+                    .presentationDetents([.medium, .large])
+                    .presentationDragIndicator(.visible)
+                    .interactiveDismissDisabled(false)
+                    .environment(\.layoutDirection, .rightToLeft)
             }
         }
     }

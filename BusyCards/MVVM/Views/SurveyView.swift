@@ -8,6 +8,7 @@ import SwiftUI
 
 struct SurveyView: View {
     @StateObject private var viewModel = SurveyViewModel()
+    @EnvironmentObject var childrenVM: ChildrenViewModel
     
     @State private var showNamePopup = false
     @State private var showResultPopup = false
@@ -97,6 +98,11 @@ struct SurveyView: View {
                 
                 Button("متابعة") {
                     finalResult = viewModel.calculateResult()
+
+                    let trimmed = studentName.trimmingCharacters(in: .whitespacesAndNewlines)
+                    if !trimmed.isEmpty {
+                        childrenVM.addChild(name: trimmed, type: finalResult)
+                    }
                     showResultPopup = true
                 }
                 Button("إلغاء") {
@@ -132,7 +138,6 @@ struct SurveyView: View {
                 .background(isSelected ? Color.darkBlue.opacity(0.2) : Color.white)
                 .cornerRadius(12)
                 .shadow(color: .black.opacity(0.15), radius: 4, y: 2)
-      
         }
     }
     
