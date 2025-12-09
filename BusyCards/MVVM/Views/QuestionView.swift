@@ -1,26 +1,26 @@
-// QuestionView.swift (المُعدّل)
 
 import SwiftUI
+import UniformTypeIdentifiers
 
 struct QuestionView: View {
     @StateObject private var viewModel = QuestionsViewModel()
     @State private var showingAddCard = false
     @State private var newTitle: String = ""
     @State private var newLink: String = ""
+    @State private var mp3FileName: String? = nil
+    @State private var showingFileImporter = false
+
     @FocusState private var isFieldFocused: Bool
     @Environment(\.dismiss) private var dismiss
-    
-    // Base background color (same as screen) to help the glass effect blend
+
     private let baseBg = Color(red: 0.96, green: 0.90, blue: 0.90)
 
     var body: some View {
         ZStack {
-            // Background color similar to the screenshot
             baseBg
                 .ignoresSafeArea()
 
             VStack(spacing: 0) {
-                // ... (Header and List content remain the same) ...
                 header
                     .padding(.horizontal, 16)
                     .padding(.top, 16)
@@ -29,14 +29,14 @@ struct QuestionView: View {
                 List {
                     ForEach(viewModel.items) { item in
                         Text(item.title)
-                            .font(.custom("SF Arabic Rounded", size: 22)) // bigger text
+                            .font(.custom("SF Arabic Rounded", size: 22))
                             .lineLimit(nil)
-                            .lineSpacing(4) // more line spacing for multi-line titles
-                            .frame(maxWidth: .infinity, alignment: .leading) // محاذاة النص لليمين
-                            .padding(.vertical, 14) // taller rows
-                            .listRowInsets(EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16)) // use almost full width
+                            .lineSpacing(4)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .padding(.vertical, 14)
+                            .listRowInsets(EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16))
                             .listRowBackground(Color.clear)
-                            .swipeActions(edge: .leading) { // السحب من اليسار
+                            .swipeActions(edge: .leading) {
                                 Button(role: .destructive) {
                                     deleteItem(item)
                                 } label: {
@@ -45,17 +45,15 @@ struct QuestionView: View {
                             }
                     }
                 }
-                .environment(\.layoutDirection, .rightToLeft) // Ensure the List itself is RTL
-                .scrollContentBackground(.hidden) // remove List's default background
+                .environment(\.layoutDirection, .rightToLeft)
+                .scrollContentBackground(.hidden)
                 .listStyle(.plain)
-                .listRowSeparator(.hidden) // hide separators
+                .listRowSeparator(.hidden)
                 .safeAreaPadding(.top, 4)
             }
 
-            // Floating add card overlay
             if showingAddCard {
                 ZStack {
-                    // Dimmed backdrop (tap to dismiss)
                     Color.black.opacity(0.15)
                         .ignoresSafeArea()
                         .onTapGesture { cancelAdd() }
@@ -74,19 +72,17 @@ struct QuestionView: View {
         .animation(.spring(response: 0.35, dampingFraction: 0.9), value: showingAddCard)
         .environment(\.layoutDirection, .rightToLeft)
         
-        // ✅ إضافة fullScreenCover للتحكم في ظهور صفحة الفيديو
+        // Video full screen cover (friend's logic)
         .fullScreenCover(isPresented: $viewModel.shouldShowVideoPlayer) {
-            // نستخدم المعرّف المستخرج من الـ ViewModel
             if let videoID = viewModel.extractedVideoID {
                 SeeingPage2(videoID: videoID)
             } else {
-                // هذا الجزء لن يظهر أبداً طالما أن shouldShowVideoPlayer=true، ولكن للحماية
                 Text("خطأ في تحميل الفيديو")
             }
         }
     }
-    
-    // ... (private var header: some View remains the same) ...
+
+    // MARK: - Header
     private var header: some View {
         ZStack {
             Text("أسئلة اليوم")
@@ -95,24 +91,16 @@ struct QuestionView: View {
                 .multilineTextAlignment(.center)
 
             HStack {
-                // PLUS on the right (first in RTL HStack)
-                GlassCircleButton(
-                    systemName: "plus",
-                    diameter: 48,
-                    baseBackground: baseBg
-                ) {
+                GlassCircleButton(systemName: "plus", diameter: 48, baseBackground: baseBg) {
                     showingAddCard.toggle()
                     if showingAddCard {
                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
                             isFieldFocused = true
                         }
                     } else {
-                        isFieldFocused = false
-                        newTitle = ""
-                        newLink = ""
+                        cancelAdd()
                     }
                 }
-
                 Spacer()
             }
         }
@@ -120,15 +108,13 @@ struct QuestionView: View {
         .padding(.horizontal, 4)
     }
 
-    // MARK: - Add Card UI (remains the same)
+    // MARK: - Add Card
     private var addCard: some View {
         VStack(alignment: .trailing, spacing: 20) {
-            // العنوان الأول
             Text("أضف سؤال")
                 .font(.custom("SF Arabic Rounded", size: 26).weight(.semibold))
                 .frame(maxWidth: .infinity, alignment: .leading)
 
-            // حقل السؤال
             TextField("سؤال", text: $newTitle)
                 .focused($isFieldFocused)
                 .textInputAutocapitalization(.sentences)
@@ -139,13 +125,11 @@ struct QuestionView: View {
                 .font(.custom("SF Arabic Rounded", size: 22))
                 .foregroundStyle(.primary)
 
-            // العنوان الثاني
-            Text("أضف رابط الإجابة")
+            Text("أضف رابط يوتيوب للإجابة")
                 .font(.custom("SF Arabic Rounded", size: 26).weight(.semibold))
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.top, 4)
 
-            // حقل الرابط
             TextField("رابط", text: $newLink)
                 .keyboardType(.URL)
                 .textInputAutocapitalization(.never)
@@ -156,14 +140,24 @@ struct QuestionView: View {
                 .font(.custom("SF Arabic Rounded", size: 22))
                 .foregroundStyle(.primary)
 
-            // النص الإرشادي
-            Text("تأكد من إمكانية عمل الرابط لك فيديو أو صوت.")
-                .font(.custom("SF Arabic Rounded", size: 20))
-                .foregroundStyle(.primary)
-                .multilineTextAlignment(.leading)
-                .padding(.top, 2)
+            // MP3 Picker
+            Text("اختر ملف صوت للإجابة")
+                .font(.custom("SF Arabic Rounded", size: 26).weight(.semibold))
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.top, 4)
 
-            // الأزرار
+            Button(action: { showingFileImporter = true }) {
+                HStack {
+                    Text(mp3FileName ?? "اختر ملف صوت")
+                        .font(.custom("SF Arabic Rounded", size: 22))
+                    Spacer()
+                    Image(systemName: "doc.fill")
+                        .background(Capsule().fill(Color(.systemGray6)))
+                }
+                .padding()
+                .background(Capsule().fill(Color(.systemGray6)))
+            }
+
             HStack(spacing: 16) {
                 Button(action: cancelAdd) {
                     Text("إلغاء")
@@ -192,21 +186,32 @@ struct QuestionView: View {
                 .fill(Color(.systemBackground))
                 .shadow(color: .black.opacity(0.08), radius: 16, x: 0, y: 8)
         )
+        .fileImporter(isPresented: $showingFileImporter, allowedContentTypes: [.audio]) { result in
+            switch result {
+            case .success(let url):
+                let filename = url.lastPathComponent
+                let destURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent(filename)
+                try? FileManager.default.copyItem(at: url, to: destURL)
+                mp3FileName = filename
+            case .failure(let error):
+                print("Error picking file: \(error.localizedDescription)")
+            }
+        }
     }
 
-    // MARK: - Actions (Modified)
+    // MARK: - Actions
     private func saveAdd() {
         let trimmedTitle = newTitle.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmedTitle.isEmpty else { return }
-        
-        // ✅ استخدام الدالة الجديدة التي تعالج الرابط
-        viewModel.processAndSave(title: trimmedTitle, link: newLink)
-        
+
+        viewModel.add(title: trimmedTitle,
+                      link: newLink.trimmingCharacters(in: .whitespacesAndNewlines),
+                      mp3FileName: mp3FileName)
+
         UIImpactFeedbackGenerator(style: .light).impactOccurred()
-        
-        // مسح الحقول وإخفاء البطاقة
         newTitle = ""
         newLink = ""
+        mp3FileName = nil
         isFieldFocused = false
         showingAddCard = false
     }
@@ -215,9 +220,9 @@ struct QuestionView: View {
         UIImpactFeedbackGenerator(style: .light).impactOccurred()
         newTitle = ""
         newLink = ""
+        mp3FileName = nil
         isFieldFocused = false
         showingAddCard = false
-        // ✅ التأكد من إعادة ضبط حالة الانتقال في حال كانت مفعّلة
         viewModel.shouldShowVideoPlayer = false
     }
 
@@ -225,15 +230,14 @@ struct QuestionView: View {
         viewModel.delete(item: item)
     }
 }
-// ... (private struct GlassCircleButton remains the same) ...
 
+// MARK: - Glass Circle Button
 private struct GlassCircleButton: View {
     let systemName: String
     var diameter: CGFloat = 48
     var baseBackground: Color
     var action: () -> Void
 
-    // Colors tuned for the rose background to get a soft glass look
     private var fill: Color { Color.white.opacity(0.35) }
     private var rimHighlight: Color { Color.white.opacity(0.85) }
     private var innerShadow: Color { Color.black.opacity(0.08) }
