@@ -1,118 +1,89 @@
 
 
 
+
+
 import SwiftUI
+
 struct SeeingPage2: View {
+    let videoID: String
+    
     @Environment(\.dismiss) private var dismiss
     
-    private let bg = Color("Background")
     private let primary = Color("DarkBlue")
     
+    // رابط يوتيوب الأصلي (لتشغيل الفيديو في التطبيق الخارجي)
+    private var youtubeAppURL: URL? {
+        // محاولة استخدام مخطط URL الخاص بيوتيوب أولاً
+        URL(string: "youtube://watch?v=\(videoID)")
+    }
     
+    // رابط المتصفح الاحتياطي
+    private var youtubeWebURL: URL? {
+        URL(string: "https://www.youtube.com/watch?v=\(videoID)")
+    }
+
     var body: some View {
-        NavigationStack{
-            ZStack(alignment: .top) {
-                bg.ignoresSafeArea()
+        ZStack{
+            Color.background
+                .ignoresSafeArea()
+            
+            
+            VStack(spacing: 40) {
                 
+                Image("GG1")
                 
-                VStack(spacing: 87) {
-                    
-                    
-                    // Center illustration
-                    Image("GG1")
-//                        .resizable()
-//                        .scaledToFit()
-//                        .frame(width: 290, height: 290)
-                       
-                    
-                  
-                    Color.darkBlue
-                        .frame(width: 368,height: 214)
-                        .cornerRadius(9)
-                    
-                    
-                    // Bottom primary button
-                    NavigationLink {
-                        HomePage()
-                            .navigationBarBackButtonHidden(true)
-                    } label: {
-                        Text("انتهيت")
+                //MARK: - Blue box
+                
+                VStack(spacing: 15) {
+                 
+                    Button(action: {
+                        // محاولة فتح التطبيق أولاً، وإلا فالمتصفح
+                        if let appURL = youtubeAppURL, UIApplication.shared.canOpenURL(appURL) {
+                            UIApplication.shared.open(appURL)
+                        } else if let webURL = youtubeWebURL {
+                            UIApplication.shared.open(webURL)
+                        }
+                    }) {
+                        Text("مشاهدة الفيديو على YouTube")
+                            .font(.system(size: 20, weight: .semibold))
                             .foregroundColor(.white)
-                            .font(.system(size: 22, weight: .semibold))
-                            .frame(maxWidth: 280, minHeight: 56)
-                            .background(
-                                RoundedRectangle(cornerRadius: 16)
-                                    .fill(primary)
-                                    .shadow(color: .black.opacity(0.25), radius: 4, x: 2, y: 3)
-                            )
+                            .padding(.vertical, 12)
+                            .padding(.horizontal, 25)
+                            .background(Capsule().fill(Color.red.opacity(0.8)))
                     }
-                    //.buttonStyle(.plain)
                 }
+                .frame(width: 368, height: 214) // الحفاظ على الحجم لضمان التنسيق
+                .background(Color.darkBlue) // خلفية المشغل الداكنة
+                .cornerRadius(9)
+                .padding(.top, 40)
+                
+                Spacer()
+                
+                //MARK: - Button انتهيت
+                
+                NavigationLink{
+                    HomePage()
+                        .navigationBarBackButtonHidden(true)
+                }label: {
+                    Text("انتهيت")
+                        .foregroundColor(.white)
+                        .font(.system(size: 22, weight: .semibold))
+                        .frame(maxWidth: 280, minHeight: 56)
+                        .background(
+                            RoundedRectangle(cornerRadius: 16)
+                                .fill(primary)
+                                .shadow(color: .black.opacity(0.25), radius: 4, x: 2, y: 3)
+                        )
+                }
+
+                .padding(.bottom, 40)
             }
         }
-
-        //.environment(\.layoutDirection, .rightToLeft)
-        .navigationBarBackButtonHidden(true)
+        .navigationBarHidden(true)
     }
 }
-
-
-
-
-// Reuse the same glassy circular button design for consistency.
-private struct GlassCircle: View {
-    let systemName: String
-    var diameter: CGFloat = 46
-    var action: () -> Void
-    
-    
-    
-    var body: some View {
-        Button(action: action) {
-            Image(systemName: systemName)
-                .font(.system(size: 18, weight: .semibold))
-                .foregroundColor(.black.opacity(0.85))
-                .frame(width: diameter, height: diameter)
-                .background(
-                    ZStack {
-                        Circle()
-                            .fill(Color.white.opacity(0.35))
-                        Circle()
-                            .stroke(Color.black.opacity(0.08), lineWidth: 1)
-                            .blur(radius: 1.2)
-                            .offset(y: 1)
-                            .mask(
-                            Circle()
-                            .fill(
-                            LinearGradient(
-                            colors: [Color.black, .clear],
-                            startPoint: .bottom,
-                            endPoint: .top
-                                        )
-                                    )
-                            )
-                        Circle()
-                            .stroke(Color.white.opacity(0.85), lineWidth: 1.1)
-                            .blendMode(.plusLighter)
-                    }
-                )
-                .background(
-                    Circle()
-                        .fill(Color.white.opacity(0.45))
-                        .blur(radius: 8)
-                        .opacity(0.7)
-                )
-                .clipShape(Circle())
-        }
-        
-        .buttonStyle(.plain)
-        .shadow(color: Color.black.opacity(0.06), radius: 6, x: 0, y: 3)
-        .contentShape(Circle())
-    }
-}
-
-
 #Preview {
-    SeeingPage2()
+    SeeingPage2(videoID: "dQw4w9WgXcQ")
 }
 

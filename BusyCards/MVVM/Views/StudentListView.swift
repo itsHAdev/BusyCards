@@ -27,7 +27,7 @@ struct StudentsListView: View {
                 }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .background(Color("Background"))
+            .background(Color("White"))
             .ignoresSafeArea()
         }
     }

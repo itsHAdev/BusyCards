@@ -29,7 +29,7 @@ struct SeeingPage: View {
                         .multilineTextAlignment(.center)
                     
                     NavigationLink {
-                        SeeingPage2()
+                        SeeingPage2(videoID: "dQw4w9WgXcQ")
                             .navigationBarBackButtonHidden(false)
                     } label: {
                         Text("انظر للإجابة")

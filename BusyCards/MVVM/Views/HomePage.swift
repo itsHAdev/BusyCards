@@ -12,7 +12,6 @@ struct HomePage: View {
     @StateObject private var viewModel = ContentViewModel()
     @State private var showStudentsList = false
     @StateObject var childrenVM = ChildrenViewModel()
-
     // Color assets
     private let beigeBackground = Color("Background")
     private let deepDarkBlue = Color("DarkBlue")
@@ -86,7 +85,7 @@ struct HomePage: View {
                         // Present the students list sheet
                         showStudentsList = true
                     } label: {
-                        glassButton(icon: "pencil.and.outline")
+                        glassButton(icon: "list.dash")
                     }
                     .buttonStyle(.plain)
                 }

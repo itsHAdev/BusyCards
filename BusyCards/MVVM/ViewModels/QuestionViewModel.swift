@@ -1,3 +1,5 @@
+// QuestionsViewModel.swift
+
 import Foundation
 import Combine
 import SwiftUI
@@ -6,6 +8,11 @@ import SwiftUI
 final class QuestionsViewModel: ObservableObject {
 
     @Published private(set) var items: [QuestionItem] = []
+    
+    // متغيرات حالة خاصة بمعالجة الفيديو والانتقال
+    @Published var extractedVideoID: String? = nil
+    // ✅ القيمة يجب أن تكون FALSE لضمان عدم الانتقال
+    @Published var shouldShowVideoPlayer: Bool = false
 
     private let saveKey = "SavedQuestions"
 
@@ -14,12 +21,46 @@ final class QuestionsViewModel: ObservableObject {
         load()
     }
 
-    // MARK: - Add
-    func add(title: String) {
-        let trimmed = title.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !trimmed.isEmpty else { return }
+    // MARK: - YouTube Link Processing Logic
+    
+    private func extractYouTubeVideoID(from urlString: String) -> String? {
+        // Regular expression for common YouTube URLs
+        let pattern = "(?<=v(=|/))([a-zA-Z0-9_-]+)|(?<=youtu\\.be/)([a-zA-Z0-9_-]+)"
+        
+        if let regex = try? NSRegularExpression(pattern: pattern, options: .caseInsensitive) {
+            let nsString = urlString as NSString
+            let results = regex.matches(in: urlString, options: [], range: NSRange(location: 0, length: nsString.length))
+            
+            for result in results {
+                for i in 1..<result.numberOfRanges {
+                    let range = result.range(at: i)
+                    if range.location != NSNotFound {
+                        return nsString.substring(with: range)
+                    }
+                }
+            }
+        }
+        return nil
+    }
+    
+    // MARK: - Add / Process
+    
+    /// دالة مُعدّلة لمعالجة الرابط وحفظ السؤال
+    func processAndSave(title: String, link: String) {
+        let trimmedTitle = title.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmedTitle.isEmpty else { return }
 
-        items.append(QuestionItem(title: trimmed))
+        // محاولة استخراج ID لتخزينه (إذا كان صالحاً)
+        let videoID = extractYouTubeVideoID(from: link)
+        let linkToSave = (videoID != nil && !link.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty) ? link : nil
+        
+        // حفظ السؤال (مع الرابط أو بدونه)
+        items.append(QuestionItem(title: trimmedTitle, answerLink: linkToSave))
+        
+        // ✅ التعديل الحاسم: نضمن أن حالة الانتقال معطلة دائمًا بعد الحفظ
+        self.extractedVideoID = nil
+        self.shouldShowVideoPlayer = false
+        
         save()
     }
 
@@ -45,24 +86,18 @@ final class QuestionsViewModel: ObservableObject {
         }
     }
     
-    /// حمّل الأسئلة المحفوظة — بدون أي بيانات أولية
+    /// حمّل الأسئلة المحفوظة
     private func load() {
         if let data = UserDefaults.standard.data(forKey: saveKey),
            let savedItems = try? JSONDecoder().decode([QuestionItem].self, from: data) {
-            self.items = savedItems  // عرض الأسئلة اللي حفظها اليوزر سابقًا
+            self.items = savedItems
         } else {
-            self.items = []  // أول تشغيل = فاضية
+            self.items = []
         }
     }
 
-    // MARK: - Optional explicit loader for .task
-    func loadSampleIfNeeded() async {
-        // Currently nothing extra to do because init() already calls load().
-        // You can add async I/O here later if needed.
-    }
     // MARK: - randomQuestion
     func randomQuestion() -> QuestionItem? {
         return items.randomElement()
     }
-
 }

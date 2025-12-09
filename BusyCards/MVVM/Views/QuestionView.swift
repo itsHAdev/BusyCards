@@ -1,13 +1,15 @@
+// QuestionView.swift (المُعدّل)
+
 import SwiftUI
 
 struct QuestionView: View {
     @StateObject private var viewModel = QuestionsViewModel()
     @State private var showingAddCard = false
     @State private var newTitle: String = ""
-    @State private var newLink: String = ""            // حقل الرابط (UI فقط حالياً)
+    @State private var newLink: String = ""
     @FocusState private var isFieldFocused: Bool
     @Environment(\.dismiss) private var dismiss
-
+    
     // Base background color (same as screen) to help the glass effect blend
     private let baseBg = Color(red: 0.96, green: 0.90, blue: 0.90)
 
@@ -18,13 +20,12 @@ struct QuestionView: View {
                 .ignoresSafeArea()
 
             VStack(spacing: 0) {
-                // Header occupies fixed vertical space; content will be below it
+                // ... (Header and List content remain the same) ...
                 header
                     .padding(.horizontal, 16)
                     .padding(.top, 16)
                     .padding(.bottom, 12)
 
-                // Content area starts here (under the icons)
                 List {
                     ForEach(viewModel.items) { item in
                         Text(item.title)
@@ -35,7 +36,7 @@ struct QuestionView: View {
                             .padding(.vertical, 14) // taller rows
                             .listRowInsets(EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16)) // use almost full width
                             .listRowBackground(Color.clear)
-                            .swipeActions(edge: .leading) {   // السحب من اليسار
+                            .swipeActions(edge: .leading) { // السحب من اليسار
                                 Button(role: .destructive) {
                                     deleteItem(item)
                                 } label: {
@@ -51,7 +52,7 @@ struct QuestionView: View {
                 .safeAreaPadding(.top, 4)
             }
 
-            // Floating add card overlay (full-screen layer so the card can be centered)
+            // Floating add card overlay
             if showingAddCard {
                 ZStack {
                     // Dimmed backdrop (tap to dismiss)
@@ -72,8 +73,20 @@ struct QuestionView: View {
         }
         .animation(.spring(response: 0.35, dampingFraction: 0.9), value: showingAddCard)
         .environment(\.layoutDirection, .rightToLeft)
+        
+        // ✅ إضافة fullScreenCover للتحكم في ظهور صفحة الفيديو
+        .fullScreenCover(isPresented: $viewModel.shouldShowVideoPlayer) {
+            // نستخدم المعرّف المستخرج من الـ ViewModel
+            if let videoID = viewModel.extractedVideoID {
+                SeeingPage2(videoID: videoID)
+            } else {
+                // هذا الجزء لن يظهر أبداً طالما أن shouldShowVideoPlayer=true، ولكن للحماية
+                Text("خطأ في تحميل الفيديو")
+            }
+        }
     }
-
+    
+    // ... (private var header: some View remains the same) ...
     private var header: some View {
         ZStack {
             Text("أسئلة اليوم")
@@ -107,7 +120,7 @@ struct QuestionView: View {
         .padding(.horizontal, 4)
     }
 
-    // MARK: - Add Card UI
+    // MARK: - Add Card UI (remains the same)
     private var addCard: some View {
         VStack(alignment: .trailing, spacing: 20) {
             // العنوان الأول
@@ -181,12 +194,17 @@ struct QuestionView: View {
         )
     }
 
-    // MARK: - Actions
+    // MARK: - Actions (Modified)
     private func saveAdd() {
-        let trimmed = newTitle.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !trimmed.isEmpty else { return }
-        viewModel.add(title: trimmed) // حالياً نخزن العنوان فقط
+        let trimmedTitle = newTitle.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmedTitle.isEmpty else { return }
+        
+        // ✅ استخدام الدالة الجديدة التي تعالج الرابط
+        viewModel.processAndSave(title: trimmedTitle, link: newLink)
+        
         UIImpactFeedbackGenerator(style: .light).impactOccurred()
+        
+        // مسح الحقول وإخفاء البطاقة
         newTitle = ""
         newLink = ""
         isFieldFocused = false
@@ -199,16 +217,15 @@ struct QuestionView: View {
         newLink = ""
         isFieldFocused = false
         showingAddCard = false
-    }
-
-    private func delete(at offsets: IndexSet) {
-        viewModel.delete(at: offsets)
+        // ✅ التأكد من إعادة ضبط حالة الانتقال في حال كانت مفعّلة
+        viewModel.shouldShowVideoPlayer = false
     }
 
     private func deleteItem(_ item: QuestionItem) {
         viewModel.delete(item: item)
     }
 }
+// ... (private struct GlassCircleButton remains the same) ...
 
 private struct GlassCircleButton: View {
     let systemName: String
