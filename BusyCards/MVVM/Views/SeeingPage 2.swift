@@ -18,9 +18,9 @@ struct SeeingPage2: View {
         URL(string: "youtube://watch?v=\(videoID)")
     }
     
-    // رابط المتصفح الاحتياطي
+    // رابط الفيديو
     private var youtubeWebURL: URL? {
-        URL(string: "https://www.youtube.com/watch?v=\(videoID)")
+        URL(string: "https://youtu.be/pk4GoC8XQ5E?si=uF8YN_Nr6I5VfFYG\(videoID)")
     }
 
     var body: some View {
