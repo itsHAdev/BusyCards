@@ -12,57 +12,124 @@ struct AuditoryView2: View {
     let question: QuestionItem
     @State private var player: AVAudioPlayer?
     @State private var isPlaying = false
+    
+    @State private var showBadge = false
+    @State private var goReward = false
 
     var body: some View {
-        ZStack {
-            Color.background
-                .ignoresSafeArea()
-
-            VStack(spacing: 68) {
-                Image("Auditory2")
-
-                Button {
-                    if isPlaying {
-                        stopAudio()
-                    } else {
-                        playAudio()
+        NavigationStack{
+            ZStack {
+                Color.background
+                    .ignoresSafeArea()
+                
+                VStack(spacing: 68) {
+                    Image("Auditory2")
+                    
+                    Button {
+                        if isPlaying {
+                            stopAudio()
+                        } else {
+                            playAudio()
+                        }
+                    } label: {
+                        ZStack {
+                            Color.darkBlue
+                                .frame(width: 218, height: 218)
+                                .cornerRadius(1000)
+                            
+                            Color.darkBlue2
+                                .frame(width: 145.21, height: 145.21)
+                                .cornerRadius(1000)
+                            
+                            Image(systemName: isPlaying ? "stop.fill" : "play.fill")
+                                .font(.system(size: 60))
+                                .foregroundStyle(Color.white)
+                        }
                     }
-                } label: {
-                    ZStack {
-                        Color.darkBlue
-                            .frame(width: 218, height: 218)
-                            .cornerRadius(1000)
-
-                        Color.darkBlue2
-                            .frame(width: 145.21, height: 145.21)
-                            .cornerRadius(1000)
-
-                        Image(systemName: isPlaying ? "stop.fill" : "play.fill")
-                            .font(.system(size: 60))
-                            .foregroundStyle(Color.white)
+                    
+                    Button {
+                        showBadge = true
+                    } label: {
+                        ZStack {
+                            Color.darkBlue
+                                .frame(width: 260, height: 56)
+                                .cornerRadius(15)
+                                .shadow(color: Color.black, radius: 3, x: 2, y: 2)
+                            
+                            Text("انتهيت")
+                                .foregroundStyle(Color.white)
+                                .font(.system(size: 28))
+                        }
                     }
                 }
-
-                NavigationLink {
-                    HomePage()
-                        .navigationBarBackButtonHidden(true)
-                } label: {
+            //MARK: - Badge
+                
+                if showBadge {
                     ZStack {
-                        Color.darkBlue
-                            .frame(width: 260, height: 56)
-                            .cornerRadius(15)
-                            .shadow(color: Color.black, radius: 3, x: 2, y: 2)
+            
+                        Color.black.opacity(0.4)
+                            .ignoresSafeArea()
 
-                        Text("انتهيت")
-                            .foregroundStyle(Color.white)
-                            .font(.system(size: 28))
-                    }
-                }
-            }
-        }
+                        VStack {
+                            Color.white
+                                .frame(width: 304, height: 481)
+                                .cornerRadius(20)
+                            
+                                .overlay(
+                                    VStack {
+                                        Image("AuditoryC")
+
+                                        Text("أنت رائع")
+                                            .font(.system(size: 36))
+
+                                        Spacer().frame(height: 9)
+
+                                        Text("جائزتك تنتظرك")
+                                            .font(.system(size: 20).weight(.light))
+                                            .foregroundStyle(Color.gray)
+
+                                        Spacer().frame(height: 30)
+
+                                        Button {
+                                            goReward = true
+                                        } label: {
+                                            ZStack {
+                                                Color.darkBlue
+                                                    .frame(width: 250, height: 53)
+                                                    .cornerRadius(16)
+
+                                                Text("أذهب للجائزة")
+                                                    .font(.system(size: 18))
+                                                    .bold()
+                                                    .foregroundStyle(Color.white)
+                                            }//z
+                                        }//b
+
+                                        Spacer().frame(height: 10)
+
+                                        Button("إغلاق") {
+                                            showBadge = false
+                                        }//b
+                                        .foregroundStyle(Color.darkBlue)
+
+                                    }//v
+                                )//overlay
+                        }//v
+                    }//z
+                }//ShowBadge
+
+                
+                NavigationLink("", destination: AuditoryReward(), isActive: $goReward)
+                                .hidden()
+
+
+                
+            }//z
+       
         .onDisappear {
             stopAudio()
         }
+    }//navS
     }
 
     private func playAudio() {

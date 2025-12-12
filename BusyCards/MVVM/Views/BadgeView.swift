@@ -55,9 +55,10 @@ struct BadgeView: View {
                 .foregroundStyle(Color.darkBlue)
             }//v
         }//z
-        
     }
 }
+
+
 
 #Preview {
     BadgeView()
