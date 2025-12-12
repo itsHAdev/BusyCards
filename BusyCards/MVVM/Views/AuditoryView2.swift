@@ -61,7 +61,7 @@ struct AuditoryView2: View {
                                 .font(.system(size: 28))
                         }
                     }
-                }
+                }//v
             //MARK: - Badge
                 
                 if showBadge {
