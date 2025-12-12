@@ -22,7 +22,7 @@ struct SeeingPage: View {
 
                     if question != nil {
                         NavigationLink {
-                            SeeingPage2(videoID: "dQw4w9WgXcQ")
+                            SeeingPage2()
                         } label: {
                             ZStack {
                                 Color.darkBlue

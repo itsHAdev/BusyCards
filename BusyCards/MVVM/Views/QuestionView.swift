@@ -75,7 +75,7 @@ struct QuestionView: View {
         // Video full screen cover (friend's logic)
         .fullScreenCover(isPresented: $viewModel.shouldShowVideoPlayer) {
             if let videoID = viewModel.extractedVideoID {
-                SeeingPage2(videoID: videoID)
+                SeeingPage2()
             } else {
                 Text("خطأ في تحميل الفيديو")
             }
