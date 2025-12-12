@@ -8,7 +8,7 @@ import AVKit
 
 struct SeeingPage2: View {
     
-    let url = Bundle.main.url(forResource: "numberVideo", withExtension: "MP4")
+    let url = Bundle.main.url(forResource: "number2Video", withExtension: "MP4")
     
     var body: some View {
         ZStack{
