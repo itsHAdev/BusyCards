@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		5F967BC42EEC26930098003D /* AVKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F967BC32EEC26930098003D /* AVKit.framework */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		5FBDB46B2EDCBA73006EABFE /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -24,6 +28,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		5F967BC32EEC26930098003D /* AVKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVKit.framework; path = System/Library/Frameworks/AVKit.framework; sourceTree = SDKROOT; };
 		5FBDB45D2EDCBA71006EABFE /* BusyCards.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BusyCards.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5FBDB46A2EDCBA73006EABFE /* BusyCardsTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BusyCardsTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		5FBDB4742EDCBA73006EABFE /* BusyCardsUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BusyCardsUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -42,6 +47,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5F967BC42EEC26930098003D /* AVKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -62,10 +68,19 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		5F967BC22EEC26930098003D /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				5F967BC32EEC26930098003D /* AVKit.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		5FBDB4542EDCBA71006EABFE = {
 			isa = PBXGroup;
 			children = (
 				5FBDB45F2EDCBA71006EABFE /* BusyCards */,
+				5F967BC22EEC26930098003D /* Frameworks */,
 				5FBDB45E2EDCBA71006EABFE /* Products */,
 			);
 			sourceTree = "<group>";
@@ -377,6 +392,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = J69BRHADWH;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -408,6 +424,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = J69BRHADWH;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;

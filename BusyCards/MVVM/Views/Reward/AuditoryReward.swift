@@ -6,8 +6,12 @@
 //
 
 import SwiftUI
+import AVKit
 
 struct AuditoryReward: View {
+    
+    let url = Bundle.main.url(forResource: "FloorIsLava", withExtension: "MP4")
+    
     var body: some View {
         
         ZStack{
@@ -15,17 +19,24 @@ struct AuditoryReward: View {
                 .ignoresSafeArea()
             
             VStack{
-                Text("شاهد الفيديو وعندما تسمع تجميد توقف عن الحركة وعندما تسمع استمر اكمل الحركة")
+                Text("شاهد الفيديو وعندما تسمع تجميد توقف عن الرقص وعندما تسمع استمر اكمل الرقص")
                     .frame(width: 334,height: 105)
                     .font(.system(size: 28))
                     .multilineTextAlignment(.center)
                 
-                Spacer().frame(height: 35)
+                Spacer().frame(height: 100)
                 
-                Color.darkBlue
-                    .frame(width: 378,height: 211)
                 
-               Spacer().frame(height: 197)
+                    
+                    if url != nil{
+                        VideoPlayer(player: AVPlayer(url: url! ))
+                            .frame(width: 378,height: 211)
+                            .border(Color.darkBlue,width: 7)
+                    }
+                 
+              Spacer().frame(height: 198)
+                
+                
                 
                 Button{}label: {
                     ZStack{
