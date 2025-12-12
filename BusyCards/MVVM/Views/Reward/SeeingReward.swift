@@ -97,7 +97,7 @@ struct SeeingReward: View {
                             Button {
                                 isEraserSelected = false
                             } label: {
-                                Image(systemName: "pencil.and.outline")
+                                Image(systemName: "pencil.tip")
                                     .font(.system(size: 30))
                                     .foregroundStyle(isEraserSelected ? Color.gray : selectedColor)
                             }//b2
