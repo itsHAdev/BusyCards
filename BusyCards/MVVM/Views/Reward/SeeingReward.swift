@@ -9,7 +9,7 @@ import SwiftUI
 
 struct SeeingReward: View {
     
-    @State private var lines: [Line] = [] // قائمة الخطوط المرسومة
+    @State private var lines: [LineModel] = [] // قائمة الخطوط المرسومة
     @State private var selectedColor: Color = .blue // اللون الحالي للقلم
     @State private var isEraserSelected: Bool = false // هل الممحاة سليكتد
     
@@ -63,7 +63,7 @@ struct SeeingReward: View {
                                     
                                     // بداية خط جديد
                                     if value.translation.width + value.translation.height == 0 {
-                                        let newLine = Line(points: [newPoint], color: currentColor)
+                                        let newLine = LineModel(points: [newPoint], color: currentColor)
                                         lines.append(newLine)
                                     } else {
                                         // إضافة نقطة إلى الخط الأخير
@@ -127,8 +127,10 @@ struct SeeingReward: View {
             // MARK: - Toolbar العلوي
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button {
-                      
+                    NavigationLink {
+                      HomePage()
+                            .navigationBarBackButtonHidden(true)
+                            
                     } label: {
                         Text("أنتهيت")
                             .foregroundColor(.black)

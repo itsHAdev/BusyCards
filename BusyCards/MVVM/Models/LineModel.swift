@@ -11,6 +11,6 @@ import SwiftUI
 struct LineModel {
     var points: [CGPoint] = []
     var color: Color = .black
-    var thickness: CGFloat = 10.0 // تم تثبيت السمك
+    var thickness: CGFloat = 5 // تم تثبيت السمك
     var isEraser: Bool = false
 }
