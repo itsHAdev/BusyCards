@@ -38,7 +38,10 @@ struct AuditoryReward: View {
                 
                 
                 
-                Button{}label: {
+                NavigationLink{
+                   HomePage()
+                        .navigationBarBackButtonHidden(true)
+                }label: {
                     ZStack{
                         Color.darkBlue
                             .frame(width: 260,height: 56)
