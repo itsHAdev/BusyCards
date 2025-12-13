@@ -33,96 +33,165 @@ struct MovingPage: View {
             return ch
         })
     }
+    
+    @State private var showBadge = false
+    @State private var goReward = false
+
 
     var body: some View {
-        ZStack {
-            bgColor.ignoresSafeArea()
-
-            VStack(spacing: 24) {
-
-                // الصورة من الأصول باسم s1 — مكبرة
-                Image("s1")
-                    .resizable()
-                    .scaledToFit()
-                    .frame(height: 220)
-                    .padding(.top, 24) // إنزال الصورة أكثر للأسفل
-
-                // العنوان
-                Text("الاجابه ٧ اقفز ٧ مرات")
-                    .font(.system(.title3, design: .rounded)).bold()
-                    .foregroundStyle(.primary)
-
-                // دائرة العدّاد مع ظلال خفيفة
-                ZStack {
-                    // ظل سفلي
-                    Circle()
-                        .fill(circleShadow)
-                        .frame(width: 170, height: 150)
-                        .offset(x: 6, y: 6)
-
-                    // حلقة بيضاء محيطة
-                    Circle()
-                        .fill(.white)
-                        .frame(width: 170, height: 170)
-
-                    // الدائرة الأساسية
-                    Circle()
-                        .fill(primaryBlue)
-                        .frame(width: 150, height: 150)
-
-                    // قيمة العدّاد بأرقام عربية
-                    Text(arabicDigits(from: counter))
-                        .font(.system(size: 56, weight: .bold, design: .rounded))
-                        .foregroundStyle(.white)
-                }
-                .padding(.top, 8)
-
-                // أزرار + و −
-                HStack(spacing: 24) {
-                    Button {
-                        counter -= 1
-                    } label: {
-                        Text("−")
-                            .font(.system(size: 28, weight: .bold, design: .rounded))
-                            .frame(width: 56, height: 36)
+        
+        NavigationStack{
+            ZStack {
+                bgColor.ignoresSafeArea()
+                
+                VStack(spacing: 24) {
+                    
+                    // الصورة من الأصول باسم s1 — مكبرة
+                    Image("s1")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(height: 220)
+                        .padding(.top, 24) // إنزال الصورة أكثر للأسفل
+                    
+                    // العنوان
+                    Text("الاجابه ٧ اقفز ٧ مرات")
+                        .font(.system(.title3, design: .rounded)).bold()
+                        .foregroundStyle(.primary)
+                    
+                    // دائرة العدّاد مع ظلال خفيفة
+                    ZStack {
+                        // ظل سفلي
+                        Circle()
+                            .fill(circleShadow)
+                            .frame(width: 170, height: 150)
+                            .offset(x: 6, y: 6)
+                        
+                        // حلقة بيضاء محيطة
+                        Circle()
+                            .fill(.white)
+                            .frame(width: 170, height: 170)
+                        
+                        // الدائرة الأساسية
+                        Circle()
+                            .fill(primaryBlue)
+                            .frame(width: 150, height: 150)
+                        
+                        // قيمة العدّاد بأرقام عربية
+                        Text(arabicDigits(from: counter))
+                            .font(.system(size: 56, weight: .bold, design: .rounded))
                             .foregroundStyle(.white)
-                            .background(primaryBlue, in: RoundedRectangle(cornerRadius: 8, style: .continuous))
-                            .shadow(color: .black.opacity(0.15), radius: 3, x: 0, y: 2)
                     }
-
+                    .padding(.top, 8)
+                    
+                    // أزرار + و −
+                    HStack(spacing: 24) {
+                        Button {
+                            counter -= 1
+                        } label: {
+                            Text("−")
+                                .font(.system(size: 28, weight: .bold, design: .rounded))
+                                .frame(width: 56, height: 36)
+                                .foregroundStyle(.white)
+                                .background(primaryBlue, in: RoundedRectangle(cornerRadius: 8, style: .continuous))
+                                .shadow(color: .black.opacity(0.15), radius: 3, x: 0, y: 2)
+                        }
+                        
+                        Button {
+                            counter += 1
+                        } label: {
+                            Text("+")
+                                .font(.system(size: 28, weight: .bold, design: .rounded))
+                                .frame(width: 56, height: 36)
+                                .foregroundStyle(.white)
+                                .background(primaryBlue, in: RoundedRectangle(cornerRadius: 8, style: .continuous))
+                                .shadow(color: .black.opacity(0.15), radius: 3, x: 0, y: 2)
+                        }
+                    }
+                    .padding(.top, 4)
+                    
+                    Spacer()
+                    
+                    // زر انتهيت — حجم ثابت 260x56
                     Button {
-                        counter += 1
+                        
+                        showBadge = true
                     } label: {
-                        Text("+")
-                            .font(.system(size: 28, weight: .bold, design: .rounded))
-                            .frame(width: 56, height: 36)
+                        Text("انتهيت")
+                            .font(.system(size: 20, weight: .semibold, design: .rounded))
                             .foregroundStyle(.white)
-                            .background(primaryBlue, in: RoundedRectangle(cornerRadius: 8, style: .continuous))
-                            .shadow(color: .black.opacity(0.15), radius: 3, x: 0, y: 2)
+                            .frame(width: 260, height: 56) // 260 × 56
+                            .background(primaryBlue, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
+                            .shadow(color: .black.opacity(0.15), radius: 5, x: 0, y: 3)
                     }
+                    .padding(.bottom, 32)
                 }
-                .padding(.top, 4)
+                // Padding عام للصفحة (يمين/يسار وأعلى/أسفل خفيف)
+                .padding(.horizontal, 20)
+                .padding(.top, 12)
+                .padding(.bottom, 12)
+                
+                //MARK: - Badge
+                    
+                    if showBadge {
+                        ZStack {
+                
+                            Color.black.opacity(0.4)
+                                .ignoresSafeArea()
 
-                Spacer()
+                            VStack {
+                                Color.white
+                                    .frame(width: 304, height: 481)
+                                    .cornerRadius(20)
+                                
+                                    .overlay(
+                                        VStack {
+                                            Image("KinestheticC")
 
-                // زر انتهيت — حجم ثابت 260x56
-                Button {
-                    // ضع الإجراء المطلوب عند الانتهاء
-                } label: {
-                    Text("انتهيت")
-                        .font(.system(size: 20, weight: .semibold, design: .rounded))
-                        .foregroundStyle(.white)
-                        .frame(width: 260, height: 56) // 260 × 56
-                        .background(primaryBlue, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
-                        .shadow(color: .black.opacity(0.15), radius: 5, x: 0, y: 3)
-                }
-                .padding(.bottom, 32)
-            }
-            // Padding عام للصفحة (يمين/يسار وأعلى/أسفل خفيف)
-            .padding(.horizontal, 20)
-            .padding(.top, 12)
-            .padding(.bottom, 12)
-        }
+                                            Text("أنت رائع")
+                                                .font(.system(size: 36))
+
+                                            Spacer().frame(height: 9)
+
+                                            Text("جائزتك تنتظرك")
+                                                .font(.system(size: 20).weight(.light))
+                                                .foregroundStyle(Color.gray)
+
+                                            Spacer().frame(height: 30)
+
+                                            Button {
+                                                goReward = true
+                                            } label: {
+                                                ZStack {
+                                                    Color.darkBlue
+                                                        .frame(width: 250, height: 53)
+                                                        .cornerRadius(16)
+
+                                                    Text("أذهب للجائزة")
+                                                        .font(.system(size: 18))
+                                                        .bold()
+                                                        .foregroundStyle(Color.white)
+                                                }//z
+                                            }//b
+
+                                            Spacer().frame(height: 10)
+
+                                            Button("إغلاق") {
+                                                showBadge = false
+                                            }//b
+                                            .foregroundStyle(Color.darkBlue)
+
+                                        }//v
+                                    )//overlay
+                            }//v
+                        }//z
+                    }//ShowBadge
+
+                    
+                    NavigationLink("", destination: MovingReward(), isActive: $goReward)
+                                    .hidden()
+                
+            }//z
+        }//navs
     }
 }
 

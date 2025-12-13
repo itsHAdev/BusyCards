@@ -15,7 +15,7 @@ class ContentViewModel: ObservableObject {
     let cards: [LearningCard] = [
         LearningCard(imageName: "HearingCard", destination: AnyView(AuditoryView())),
         LearningCard(imageName: "SeeingCard", destination: AnyView(SeeingPage())),
-        LearningCard(imageName: "MovingCard", destination: AnyView(MovingPage()))
+        LearningCard(imageName: "MovingCard", destination: AnyView(MovingPage2()))
     ]
     
     let children = [

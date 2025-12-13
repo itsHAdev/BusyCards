@@ -38,7 +38,9 @@ struct MovingReward: View {
                     
                     
                     
-                    Button{}label: {
+                    NavigationLink{
+                        HomePage()
+                    }label: {
                         ZStack{
                             Color.darkBlue
                                 .frame(width: 260,height: 56)
