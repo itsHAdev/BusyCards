@@ -39,28 +39,13 @@ struct MovingPage: View {
             bgColor.ignoresSafeArea()
 
             VStack(spacing: 24) {
-                // شريط رجوع — أسود وأكبر
-                HStack {
-                    Button {
-                        // ضع هنا حركة الرجوع إن كانت الشاشة داخل NavigationStack
-                    } label: {
-                        Image(systemName: "chevron.backward")
-                            .font(.system(size: 22, weight: .bold))   // أكبر
-                            .foregroundStyle(.black)                  // أسود
-                            .padding(10)
-                            .background(.white.opacity(0.9), in: Circle())
-                            .shadow(color: .black.opacity(0.1), radius: 2, x: 0, y: 1)
-                    }
-                    Spacer()
-                }
-                .padding(.horizontal)
 
                 // الصورة من الأصول باسم s1 — مكبرة
                 Image("s1")
                     .resizable()
                     .scaledToFit()
                     .frame(height: 220)
-                    .padding(.top, 8)
+                    .padding(.top, 24) // إنزال الصورة أكثر للأسفل
 
                 // العنوان
                 Text("الاجابه ٧ اقفز ٧ مرات")
@@ -133,6 +118,10 @@ struct MovingPage: View {
                 }
                 .padding(.bottom, 32)
             }
+            // Padding عام للصفحة (يمين/يسار وأعلى/أسفل خفيف)
+            .padding(.horizontal, 20)
+            .padding(.top, 12)
+            .padding(.bottom, 12)
         }
     }
 }
