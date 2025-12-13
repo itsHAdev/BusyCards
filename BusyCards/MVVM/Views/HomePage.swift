@@ -12,6 +12,9 @@ struct HomePage: View {
     @StateObject private var viewModel = ContentViewModel()
     @State private var showStudentsList = false
     @StateObject var childrenVM = ChildrenViewModel()
+    @State private var selectedChildType: String? = nil
+    @State private var navigateToLearning = false
+
     // Color assets
     private let beigeBackground = Color("Background")
     private let deepDarkBlue = Color("DarkBlue")
@@ -21,6 +24,14 @@ struct HomePage: View {
         NavigationStack {
 
             ZStack(alignment: .topTrailing) {
+                NavigationLink(
+                    isActive: $navigateToLearning
+                ) {
+                    destinationView()
+                } label: {
+                    EmptyView()
+                }
+                .hidden()
 
                 beigeBackground
                     .ignoresSafeArea()
@@ -94,13 +105,21 @@ struct HomePage: View {
             }
             // Attach the sheet to a stable ancestor (the ZStack)
             .sheet(isPresented: $showStudentsList) {
-                StudentsListView()
-                    .environmentObject(childrenVM)
-                    .presentationDetents([.medium, .large])
-                    .presentationDragIndicator(.visible)
-                    .interactiveDismissDisabled(false)
-                    .environment(\.layoutDirection, .rightToLeft)
+                StudentsListView(
+                    onSelect: { type in
+                        selectedChildType = type
+                        showStudentsList = false
+
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                            navigateToLearning = true
+                        }
+                    }
+                )
+                .environmentObject(childrenVM)
+                .presentationBackground(.regularMaterial)
+                   .presentationCornerRadius(28)
             }
+
         }
     }
 
@@ -127,6 +146,21 @@ struct HomePage: View {
             Image(systemName: icon)
                 .font(.system(size: 18, weight: .semibold))
                 .foregroundColor(.black.opacity(0.99))
+        }
+    }
+    @ViewBuilder
+    private func destinationView() -> some View {
+        switch selectedChildType {
+        case "سمعي":
+            AuditoryView()
+        case "بصري":
+            SeeingPage()
+        case "حركي":
+            MovingPage2()
+        case "قرائي/كتابي":
+            Text("واجهة القرائي/الكتابي")
+        default:
+            EmptyView()
         }
     }
 }

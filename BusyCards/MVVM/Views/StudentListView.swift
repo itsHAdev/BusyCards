@@ -9,6 +9,7 @@ import SwiftUI
 
 struct StudentsListView: View {
     @EnvironmentObject var childrenVM: ChildrenViewModel
+    let onSelect: (String) -> Void
     
     var body: some View {
         NavigationView {
@@ -20,8 +21,14 @@ struct StudentsListView: View {
                 ScrollView {
                     VStack(spacing: 16) {
                         ForEach(childrenVM.children) { child in
-                            ChildActionRow(child: child) // Use the action row with "ابدأ"
+                            ChildActionRow(
+                                child: child,
+                                onStart: { type in
+                                    onSelect(type)   // 👈 نمررها لـ HomePage
+                                }
+                            )
                         }
+
                     }
                     .padding()
                 }

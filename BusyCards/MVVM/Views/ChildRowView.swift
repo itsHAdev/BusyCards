@@ -9,12 +9,13 @@ import SwiftUI
 
 struct ChildActionRow: View {
     let child: Child
-    @State private var navigate = false
-    
+    let onStart: (String) -> Void   // 👈 Callback
+
     var body: some View {
         HStack {
+            // زر ابدأ
             Button("ابدأ") {
-                navigate = true
+                onStart(child.type)
             }
             .font(.custom("SF Arabic Rounded", size: 18))
             .foregroundColor(.white)
@@ -24,14 +25,17 @@ struct ChildActionRow: View {
 
             Spacer()
 
+            // الاسم + النوع
             VStack(alignment: .trailing) {
                 Text(child.name)
                     .font(.headline)
+
                 Text(child.type)
                     .font(.subheadline)
                     .foregroundColor(.gray)
             }
-            
+
+            // 👈 الصورة حسب النوع
             if let img = child.imageName {
                 Image(img)
                     .resizable()
