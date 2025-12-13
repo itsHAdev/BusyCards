@@ -16,6 +16,9 @@ struct AuditoryView2: View {
     @State private var showBadge = false
     @State private var goReward = false
 
+    // Pulse animation state
+    @State private var pulse = false
+
     var body: some View {
         NavigationStack{
             ZStack {
@@ -33,17 +36,28 @@ struct AuditoryView2: View {
                         }
                     } label: {
                         ZStack {
+                            // Outer pulsing circle
                             Color.darkBlue
                                 .frame(width: 218, height: 218)
                                 .cornerRadius(1000)
-                            
+                                .scaleEffect(isPlaying ? (pulse ? 1.08 : 0.95) : 1.0)
+                                .animation(
+                                    isPlaying ?
+                                    .easeInOut(duration: 1.2).repeatForever(autoreverses: true) :
+                                    .default,
+                                    value: pulse
+                                )
+
+                            // Inner static circle
                             Color.darkBlue2
                                 .frame(width: 145.21, height: 145.21)
                                 .cornerRadius(1000)
-                            
-                            Image(systemName: isPlaying ? "stop.fill" : "play.fill")
+
+                            // Play → Pause icon
+                            Image(systemName: isPlaying ? "pause.fill" : "play.fill")
                                 .font(.system(size: 60))
                                 .foregroundStyle(Color.white)
+                                .animation(.easeInOut(duration: 0.25), value: isPlaying)
                         }
                     }
                     
@@ -129,12 +143,23 @@ struct AuditoryView2: View {
         .onDisappear {
             stopAudio()
         }
+        .onChange(of: isPlaying) { playing in
+            // Start pulse animation when audio plays
+            if playing {
+                pulse = true
+            } else {
+                pulse = false
+            }
+        }
     }//navS
     }
 
+    // MARK: - Play from Bundle
     private func playAudio() {
-        guard let mp3FileName = question.mp3FileName else { return }
-        let url = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent(mp3FileName)
+        guard let url = Bundle.main.url(forResource: "2TimesTableSong", withExtension: "mpeg") else {
+            print("❌ Could not find 2TimesTableSong.mp3 in bundle")
+            return
+        }
 
         do {
             player = try AVAudioPlayer(contentsOf: url)
@@ -142,7 +167,7 @@ struct AuditoryView2: View {
             player?.play()
             isPlaying = true
         } catch {
-            print("Error playing MP3: \(error.localizedDescription)")
+            print("❌ Error playing sound: \(error.localizedDescription)")
         }
     }
 
@@ -153,7 +178,7 @@ struct AuditoryView2: View {
     }
 }
 
-// Delegate class to reset isPlaying when audio finishes
+// MARK: - Delegate
 private class AVDelegate: NSObject, AVAudioPlayerDelegate {
     @Binding var isPlaying: Bool
 
@@ -167,5 +192,12 @@ private class AVDelegate: NSObject, AVAudioPlayerDelegate {
 }
 
 #Preview {
-    AuditoryView2(question: QuestionItem(id: UUID(), title: "Title", link: nil, mp3FileName: "test.mp3"))
+    AuditoryView2(
+        question: QuestionItem(
+            id: UUID(),
+            title: "Title",
+            link: nil,
+            mp3FileName: "2TimesTableSong.mp3"
+        )
+    )
 }

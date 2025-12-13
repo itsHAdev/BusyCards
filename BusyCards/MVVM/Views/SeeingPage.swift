@@ -31,7 +31,7 @@ struct SeeingPage: View {
                                     .cornerRadius(15)
                                     .shadow(color: Color.black, radius: 3, x: 2, y: 2)
 
-                                Text("استمع للإجابة")
+                                Text("أنظر للاجابة")
                                     .foregroundStyle(Color.white)
                                     .font(.system(size: 28))
                             }
