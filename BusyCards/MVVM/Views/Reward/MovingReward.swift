@@ -40,6 +40,7 @@ struct MovingReward: View {
                     
                     NavigationLink{
                         HomePage()
+                            .navigationBarBackButtonHidden(true)
                     }label: {
                         ZStack{
                             Color.darkBlue

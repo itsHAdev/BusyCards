@@ -8,109 +8,152 @@ struct QuestionView: View {
     @State private var newTitle: String = ""
     @State private var newLink: String = ""
     @State private var mp3FileName: String? = nil
+    @State private var videoFileName: String? = nil
     @State private var showingFileImporter = false
 
     @FocusState private var isFieldFocused: Bool
     @Environment(\.dismiss) private var dismiss
 
     private let baseBg = Color(red: 0.96, green: 0.90, blue: 0.90)
+    
+    enum FilePickerType {
+        case video
+        case audio
+    }
+
+    @State private var pickerType: FilePickerType? = nil
+
 
     var body: some View {
-        ZStack {
-            baseBg
-                .ignoresSafeArea()
-
-            VStack(spacing: 0) {
-                header
-                    .padding(.horizontal, 16)
-                    .padding(.top, 16)
-                    .padding(.bottom, 12)
-
-                List {
-                    ForEach(viewModel.items) { item in
-                        Text(item.title)
-                            .font(.custom("SF Arabic Rounded", size: 22))
-                            .lineLimit(nil)
-                            .lineSpacing(4)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .padding(.vertical, 14)
-                            .listRowInsets(EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16))
-                            .listRowBackground(Color.clear)
-                            .swipeActions(edge: .leading) {
-                                Button(role: .destructive) {
-                                    deleteItem(item)
-                                } label: {
-                                    Text("حذف")
+        NavigationStack{
+            ZStack {
+                baseBg
+                    .ignoresSafeArea()
+                
+                VStack(spacing: 0) {
+                    
+                    //                header
+                    //                    .padding(.horizontal, 16)
+                    //                    .padding(.top, 16)
+                    //                    .padding(.bottom, 12)
+                    
+                    List {
+                        ForEach(viewModel.items) { item in
+                            Text(item.title)
+                                .font(.custom("SF Arabic Rounded", size: 22))
+                                .lineLimit(nil)
+                                .lineSpacing(4)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .padding(.vertical, 14)
+                                .listRowInsets(EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16))
+                                .listRowBackground(Color.clear)
+                                .swipeActions(edge: .leading) {
+                                    Button(role: .destructive) {
+                                        deleteItem(item)
+                                    } label: {
+                                        Text("حذف")
+                                    }
                                 }
-                            }
-                    }
-                }
-                .environment(\.layoutDirection, .rightToLeft)
-                .scrollContentBackground(.hidden)
-                .listStyle(.plain)
-                .listRowSeparator(.hidden)
-                .safeAreaPadding(.top, 4)
-            }
-
-            if showingAddCard {
-                ZStack {
-                    Color.black.opacity(0.15)
-                        .ignoresSafeArea()
-                        .onTapGesture { cancelAdd() }
-
-                    addCard
-                        .padding(.horizontal, 24)
-                        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
-                }
-                .transition(.asymmetric(
-                    insertion: .scale(scale: 0.95).combined(with: .opacity),
-                    removal: .opacity
-                ))
-                .zIndex(1)
-            }
-        }
-        .animation(.spring(response: 0.35, dampingFraction: 0.9), value: showingAddCard)
-        .environment(\.layoutDirection, .rightToLeft)
-        
-        // Video full screen cover (friend's logic)
-        .fullScreenCover(isPresented: $viewModel.shouldShowVideoPlayer) {
-            if let videoID = viewModel.extractedVideoID {
-                SeeingPage2()
-            } else {
-                Text("خطأ في تحميل الفيديو")
-            }
-        }
-    }
-
-    // MARK: - Header
-    private var header: some View {
-        ZStack {
-            Text("أسئلة اليوم")
-                .font(.custom("SF Arabic Rounded", size: 25))
-                .foregroundStyle(.primary)
-                .multilineTextAlignment(.center)
-
-            HStack {
-                GlassCircleButton(systemName: "plus", diameter: 48, baseBackground: baseBg) {
-                    showingAddCard.toggle()
-                    if showingAddCard {
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
-                            isFieldFocused = true
                         }
-                    } else {
-                        cancelAdd()
                     }
+                    .environment(\.layoutDirection, .rightToLeft)
+                    .scrollContentBackground(.hidden)
+                    .listStyle(.plain)
+                    .listRowSeparator(.hidden)
+                    .safeAreaPadding(.top, 4)
+                }//v
+                
+                //MARK: - Toolbar
+                
+                .toolbar {
+                    
+                    // العنوان بالنص
+                    ToolbarItem(placement: .principal) {
+                        Text("أسئلة اليوم")
+                            .font(.custom("SF Arabic Rounded", size: 25))
+                    }
+                    
+                    // زر الإضافة (يمين)
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        Button(action: {
+                            showingAddCard.toggle()
+                            if showingAddCard {
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
+                                    isFieldFocused = true
+                                }
+                            } else {
+                                cancelAdd()
+                            }
+                        }) {
+                            Image(systemName: "plus")
+                                .font(.system(size: 20))
+                                .foregroundColor(.black) 
+                        }
+                    }
+                }//tool
+                
+                if showingAddCard {
+                    ZStack {
+                        Color.black.opacity(0.15)
+                            .ignoresSafeArea()
+                            .onTapGesture { cancelAdd() }
+                        
+                        addCard
+                            .padding(.horizontal, 24)
+                            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+                    }
+                    .transition(.asymmetric(
+                        insertion: .scale(scale: 0.95).combined(with: .opacity),
+                        removal: .opacity
+                    ))
+                    .zIndex(1)
                 }
-                Spacer()
-            }
-        }
-        .frame(maxWidth: .infinity, minHeight: 64, alignment: .center)
-        .padding(.horizontal, 4)
+            }//z
+            .animation(.spring(response: 0.35, dampingFraction: 0.9), value: showingAddCard)
+            .environment(\.layoutDirection, .rightToLeft)
+//            
+//             Video full screen cover (friend's logic)
+//            .fullScreenCover(isPresented: $viewModel.shouldShowVideoPlayer) {
+//                if let videoID = viewModel.extractedVideoID {
+//                    SeeingPage2()
+//                } else {
+//                    Text("خطأ في تحميل الفيديو")
+//                }
+//            }
+        }//nav
     }
+
+//    // MARK: - Header
+//    private var header: some View {
+//        ZStack {
+//            Text("أسئلة اليوم")
+//                .font(.custom("SF Arabic Rounded", size: 25))
+//                .foregroundStyle(.primary)
+//                .multilineTextAlignment(.center)
+//
+//            HStack {
+//                GlassCircleButton(systemName: "plus", diameter: 48, baseBackground: baseBg) {
+//                    showingAddCard.toggle()
+//                    if showingAddCard {
+//                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
+//                            isFieldFocused = true
+//                        }
+//                    } else {
+//                        cancelAdd()
+//                    }
+//                }
+//                Spacer()
+//            }//h
+//        }
+//        .frame(maxWidth: .infinity, minHeight: 64, alignment: .center)
+//        .padding(.horizontal, 4)
+//    }
 
     // MARK: - Add Card
     private var addCard: some View {
         VStack(alignment: .trailing, spacing: 20) {
+            
+            //MARK: add Q
             Text("أضف سؤال")
                 .font(.custom("SF Arabic Rounded", size: 26).weight(.semibold))
                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -124,29 +167,41 @@ struct QuestionView: View {
                 .background(Capsule().fill(Color(.systemGray6)))
                 .font(.custom("SF Arabic Rounded", size: 22))
                 .foregroundStyle(.primary)
+            
+            //MARK: - addVideo
 
-            Text("أضف رابط يوتيوب للإجابة")
+            Text("أضف ملف يوتيوب للإجابة")
                 .font(.custom("SF Arabic Rounded", size: 26).weight(.semibold))
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.top, 4)
 
-            TextField("رابط", text: $newLink)
-                .keyboardType(.URL)
-                .textInputAutocapitalization(.never)
-                .autocorrectionDisabled(true)
-                .padding(.horizontal, 20)
-                .padding(.vertical, 18)
+            Button(action: {
+                pickerType = .video
+                showingFileImporter = true
+            })
+                {
+                HStack {
+                    Text(videoFileName ?? "اختر ملف فيديو")
+                        .font(.custom("SF Arabic Rounded", size: 22))
+                    Spacer()
+                    Image(systemName: "doc.fill")
+                        .background(Capsule().fill(Color(.systemGray6)))
+                }
+                .padding()
                 .background(Capsule().fill(Color(.systemGray6)))
-                .font(.custom("SF Arabic Rounded", size: 22))
-                .foregroundStyle(.primary)
+            }
 
-            // MP3 Picker
+            //MARK: - addAudio
+            
             Text("اختر ملف صوت للإجابة")
                 .font(.custom("SF Arabic Rounded", size: 26).weight(.semibold))
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.top, 4)
 
-            Button(action: { showingFileImporter = true }) {
+            Button(action: {
+                pickerType = .audio
+                showingFileImporter = true
+            }) {
                 HStack {
                     Text(mp3FileName ?? "اختر ملف صوت")
                         .font(.custom("SF Arabic Rounded", size: 22))
@@ -186,18 +241,38 @@ struct QuestionView: View {
                 .fill(Color(.systemBackground))
                 .shadow(color: .black.opacity(0.08), radius: 16, x: 0, y: 8)
         )
-        .fileImporter(isPresented: $showingFileImporter, allowedContentTypes: [.audio]) { result in
+        //MARK: - fileImprter
+        
+        .fileImporter(
+            isPresented: $showingFileImporter,
+            allowedContentTypes: pickerType == .video
+                ? [.movie]
+                : [.audio]
+        ) { result in
             switch result {
             case .success(let url):
                 let filename = url.lastPathComponent
-                let destURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent(filename)
+                let destURL = FileManager.default
+                    .urls(for: .documentDirectory, in: .userDomainMask)[0]
+                    .appendingPathComponent(filename)
+
                 try? FileManager.default.copyItem(at: url, to: destURL)
-                mp3FileName = filename
+
+                if pickerType == .video {
+                    videoFileName = filename
+                } else {
+                    mp3FileName = filename
+                }
+
+                pickerType = nil
+
             case .failure(let error):
                 print("Error picking file: \(error.localizedDescription)")
+                pickerType = nil
             }
         }
-    }
+
+    }//body
 
     // MARK: - Actions
     private func saveAdd() {

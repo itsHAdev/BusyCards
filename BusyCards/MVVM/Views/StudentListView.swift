@@ -13,29 +13,29 @@ struct StudentsListView: View {
     
     var body: some View {
         NavigationView {
-            VStack {
-                Text("قائمة الاسماء")
-                    .font(.title)
-                    .padding(.top, 20)
-
-                ScrollView {
-                    VStack(spacing: 16) {
-                        ForEach(childrenVM.children) { child in
-                            ChildActionRow(
-                                child: child,
-                                onStart: { type in
-                                    onSelect(type)   // 👈 نمررها لـ HomePage
-                                }
-                            )
+                VStack {
+                    Text("قائمة الاسماء")
+                        .font(.title)
+                        .padding(.top, 20)
+                    
+                    ScrollView {
+                        VStack(spacing: 16) {
+                            ForEach(childrenVM.children) { child in
+                                ChildActionRow(
+                                    child: child,
+                                    onStart: { type in
+                                        onSelect(type)   // 👈 نمررها لـ HomePage
+                                    }
+                                )
+                            }
+                            
                         }
-
+                        .padding()
                     }
-                    .padding()
                 }
-            }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .background(Color("White"))
-            .ignoresSafeArea()
-        }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .background(Color("White"))
+                .ignoresSafeArea()
+        }//nav
     }
 }

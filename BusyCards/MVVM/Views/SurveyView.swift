@@ -16,110 +16,117 @@ struct SurveyView: View {
     @State private var studentName = ""
     @State private var finalResult = ""
     
+    @Environment(\.dismiss) private var dismiss
+
+    
     var body: some View {
-        ZStack {
-            Color("Background").ignoresSafeArea()
-            
-            VStack(spacing: 80){
+        NavigationStack{
+            ZStack {
+                Color("Background").ignoresSafeArea()
                 
-                progressBar
+                VStack(spacing: 80){
+                    
+                    progressBar
                     //.padding(.top, 20)
-                
-                VStack (spacing: 80){
                     
-                    // Spacer().frame(height: 50)
-                    
-                    
-                    
-                    // Spacer().frame(height: 50)
-                    
-                    Text(viewModel.questions[viewModel.currentIndex].questions)
-                        .font(.custom("SF Arabic Rounded", size: 24))
-                        .multilineTextAlignment(.trailing)
-                        .padding(.horizontal, 20)
-                    
-                    VStack {
-                        //Spacer()
+                    VStack (spacing: 80){
+                        
+                        // Spacer().frame(height: 50)
+                        
                         
                         
                         // Spacer().frame(height: 50)
                         
-                        VStack(spacing: 16) {
-                            ForEach(viewModel.questions[viewModel.currentIndex].options, id: \.self) { option in
-                                optionButton(option)
+                        Text(viewModel.questions[viewModel.currentIndex].questions)
+                            .font(.custom("SF Arabic Rounded", size: 24))
+                            .multilineTextAlignment(.trailing)
+                            .padding(.horizontal, 20)
+                        
+                        VStack {
+                            //Spacer()
+                            
+                            
+                            // Spacer().frame(height: 50)
+                            
+                            VStack(spacing: 16) {
+                                ForEach(viewModel.questions[viewModel.currentIndex].options, id: \.self) { option in
+                                    optionButton(option)
+                                }
                             }
+                            .padding(.horizontal, 24)
+                            
+                            //Spacer()
                         }
-                        .padding(.horizontal, 24)
+                        
                         
                         //Spacer()
-                    }
-                    
-                    
-                    //Spacer()
-                    
-                    
-                    Button(action: {
-                        if viewModel.selectedOptions[viewModel.questions[viewModel.currentIndex].id] == nil {
-                            return
-                        }
                         
-                        if viewModel.isLastQuestion {
-                            finalResult = viewModel.calculateResult()
-                            showNamePopup = true
+                        
+                        Button(action: {
+                            if viewModel.selectedOptions[viewModel.questions[viewModel.currentIndex].id] == nil {
+                                return
+                            }
                             
+                            if viewModel.isLastQuestion {
+                                finalResult = viewModel.calculateResult()
+                                showNamePopup = true
+                                
+                                
+                            } else {
+                                viewModel.nextQuestion()
+                            }
+                        }) {
                             
-                        } else {
-                            viewModel.nextQuestion()
+                            //Spacer().frame(height: 50)
+                            
+                            Text("التالي")
+                                .font(.custom("SF Arabic Rounded", size: 20))
+                                .foregroundColor(.white)
+                                .frame(width: 334, height: 50)
+                                .background(Color.darkBlue)
+                                .cornerRadius(14)
+                                .shadow(color: .black.opacity(0.15), radius: 4, y: 2)
                         }
-                    }) {
-                        
-                        //Spacer().frame(height: 50)
-                        
-                        Text("التالي")
-                            .font(.custom("SF Arabic Rounded", size: 20))
-                            .foregroundColor(.white)
-                            .frame(width: 334, height: 50)
-                            .background(Color.darkBlue)
-                            .cornerRadius(14)
-                            .shadow(color: .black.opacity(0.15), radius: 4, y: 2)
+                        //.padding(.bottom, 30)
                     }
-                    //.padding(.bottom, 30)
                 }
-            }
-        }
-        
-        
-        .alert(
-            "أدخل اسم الطالب",
-            isPresented: $showNamePopup,
-            presenting: (),
-            actions: { _ in
-                TextField("الاسم", text: $studentName)
-                
-                Button("متابعة") {
-                    finalResult = viewModel.calculateResult()
-
-                    let trimmed = studentName.trimmingCharacters(in: .whitespacesAndNewlines)
-                    if !trimmed.isEmpty {
-                        childrenVM.addChild(name: trimmed, type: finalResult)
+            }//z
+            
+            
+            .alert(
+                "أدخل اسم الطالب",
+                isPresented: $showNamePopup,
+                presenting: (),
+                actions: { _ in
+                    TextField("الاسم", text: $studentName)
+                    
+                    Button("متابعة") {
+                        finalResult = viewModel.calculateResult()
+                        
+                        let trimmed = studentName.trimmingCharacters(in: .whitespacesAndNewlines)
+                        if !trimmed.isEmpty {
+                            childrenVM.addChild(name: trimmed, type: finalResult)
+                        }
+                        showResultPopup = true
                     }
-                    showResultPopup = true
+                    Button("إلغاء") {
+                        showNamePopup = false
+                    }
+                },
+                message: { _ in
+                    EmptyView()
                 }
-                Button("إلغاء") {
-                    showNamePopup = false
+            )
+            
+            .alert("النتيجة النهائية", isPresented: $showResultPopup) {
+                Button("حسناً") {
+                    dismiss()
                 }
-            },
-            message: { _ in
-                EmptyView()
+            } message: {
+                Text("نوع التعلم: \(finalResult)")
             }
-        )
-        
-        .alert("النتيجة النهائية", isPresented: $showResultPopup) {
-            Button("حسناً") {}
-        } message: {
-            Text("نوع التعلم: \(finalResult)")
-        }
-    }
+        }//nav
+    }//body
     
     
    

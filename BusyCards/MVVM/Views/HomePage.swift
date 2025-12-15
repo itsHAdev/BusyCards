@@ -115,9 +115,11 @@ struct HomePage: View {
                         }
                     }
                 )
+                .presentationDetents([.fraction(0.90)])
+                .presentationDragIndicator(.visible)
+                .presentationBackground(.clear)
                 .environmentObject(childrenVM)
-                .presentationBackground(.regularMaterial)
-                   .presentationCornerRadius(28)
+                .presentationCornerRadius(28)
             }
 
         }
