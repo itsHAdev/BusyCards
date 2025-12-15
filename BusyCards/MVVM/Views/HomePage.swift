@@ -18,6 +18,10 @@ struct HomePage: View {
     // Color assets
     private let beigeBackground = Color("Background")
     private let deepDarkBlue = Color("DarkBlue")
+    
+    @State private var showAlert = false
+    @State private var navigateToSurvey = false
+
 
     
     var body: some View {
@@ -72,14 +76,38 @@ struct HomePage: View {
                     .frame(height: 500)
 
                    
-                    NavigationLink(destination: SurveyView().environmentObject(childrenVM)) {
-                        Text("ابدأ الاختبار")
+//                    NavigationLink(destination: SurveyView().environmentObject(childrenVM)) {
+//                        Text("اختبار نمط التعلم")
+//                            .font(.title2.weight(.semibold))
+//                            .frame(maxWidth: 250, minHeight: 56)
+//                            .background(deepDarkBlue)
+//                            .foregroundColor(.white)
+//                            .cornerRadius(12)
+//                    }
+                    Button {
+                        showAlert = true
+                    } label: {
+                        Text("اختبار نمط التعلم")
                             .font(.title2.weight(.semibold))
                             .frame(maxWidth: 250, minHeight: 56)
                             .background(deepDarkBlue)
                             .foregroundColor(.white)
                             .cornerRadius(12)
                     }
+                    .alert("اختبار تحديد نمط التعلم", isPresented: $showAlert) {
+                        
+                        Button("إلغاء", role: .cancel) {}
+                        
+                        Button("حسنًا") {
+                            navigateToSurvey = true
+                        }
+                    } message: {
+                        Text("هذا الاختبار يجب أن يجيب عليه الطفل بنفسه، مع إشراف المعلم أو ولي الأمر. يرجى اختيار الإجابات بدقة، لأن صحة النتائج تعتمد على صحة الإجابات.")
+                            .multilineTextAlignment(.trailing)
+                            .environment(\.layoutDirection, .rightToLeft)
+                    }
+                    .multilineTextAlignment(.trailing)
+                    .environment(\.layoutDirection, .rightToLeft)
                     .padding(.bottom, 60)
                     .padding(.top, 40)
                 }
@@ -120,6 +148,13 @@ struct HomePage: View {
                 .presentationBackground(.clear)
                 .environmentObject(childrenVM)
                 .presentationCornerRadius(28)
+            }
+            NavigationLink(
+                destination: SurveyView()
+                    .environmentObject(childrenVM),
+                isActive: $navigateToSurvey
+            ) {
+                EmptyView()
             }
 
         }
