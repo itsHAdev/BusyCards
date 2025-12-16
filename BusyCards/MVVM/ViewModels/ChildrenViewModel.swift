@@ -20,7 +20,7 @@ class ChildrenViewModel: ObservableObject {
         switch type {
         case "سمعي": return "AuditoryC"
         case "بصري": return "VisualC"
-        case "حركي": return "KeinestheticC"
+        case "حركي": return "KinestheticC"
         case "قرائي/كتابي": return "VisualC"
         default: return "defaultKid"
         }
